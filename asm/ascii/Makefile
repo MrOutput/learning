@@ -8,4 +8,4 @@ test.o: test.asm
 
 clean:
 	rm *.o
-	rm a.out
+	rm test
