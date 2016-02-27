@@ -12,13 +12,14 @@ SECTION .text
         mov rdx,1      ; length
         syscall
         cmp bl,1       ; is exit flag on
-        jz .exit      ; exit if exit flag is set
-
+        jz .exit       ; exit if exit flag is set
+        
+        ; loop
         inc byte [letter]     ; increment letter value
         cmp byte [letter],255 ; compare letter value to 255 (max ascii value)
         jb .print             ; if letter value is less than 255, print another letter
 
-        ; loop
+        ; print newline char and exit
         mov byte [letter],10 ; set letter to newline char
         mov bl,1             ; set exit flag
         jmp .print           ; print letter
