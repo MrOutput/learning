@@ -14,12 +14,12 @@ SECTION .text
         cmp bl,1       ; is exit flag on
         jz .exit      ; exit if exit flag is set
 
-        inc byte [letter]     ; increment letter value
-        cmp byte [letter],255 ; compare letter value to 255 (max ascii value)
+        inc word [letter]     ; increment letter value
+        cmp word [letter],512 ; compare letter value to 255 (max ascii value)
         jb .print             ; if letter value is less than 255, print another letter
 
         ; loop
-        mov byte [letter],10 ; set letter to newline char
+        mov word [letter],10 ; set letter to newline char
         mov bl,1             ; set exit flag
         jmp .print           ; print letter
 
@@ -30,4 +30,4 @@ SECTION .text
         syscall
 
 SECTION .data
-    letter DB '0'
+    letter DW 0H
