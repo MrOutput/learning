@@ -3,18 +3,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-int make_socket(uint16_t port);
-
 int main(void)
-{
-    int socket = make_socket(3333);
-
-    printf("Socket is: %d\n", socket);
-
-    return 0;
-}
-
-int make_socket(uint16_t port)
 {
     int sock;
     struct sockaddr_in name;
@@ -28,13 +17,22 @@ int make_socket(uint16_t port)
 
     /* Give the socket a name. */
     name.sin_family = AF_INET;
-    name.sin_port = htons(port);
+    name.sin_port = htons(3333);
     name.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(sock, (struct sockaddr *) &name, sizeof (name)) < 0) {
+    int ssize = sizeof(name);
+
+    if (bind(sock, (struct sockaddr *) &name, ssize) < 0) {
         perror("bind");
         exit(EXIT_FAILURE);
     }
 
-    return sock;
+    printf("Socket is: %d\n", sock);
+
+    printf("Listening status is: %d\n", listen(sock, 1));
+
+    printf("Accepting connection: %d\n",
+    accept(sock, (struct sockaddr *) &name, &ssize));
+
+    return 0;
 }
