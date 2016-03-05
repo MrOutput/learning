@@ -2,8 +2,8 @@
 
 #define BAR_LENGTH 50
 
-void printHg(int, int, int);
-int calcBars(int, int, int);
+void printHg(int occur, int DistroLen, int Hlength);
+int calcBars(int occur, int DistroLen, int Hlength);
 
 main()
 {
@@ -23,15 +23,15 @@ main()
     printHg(ws, nc, BAR_LENGTH);
 }
 
-void printHg(int occur, int DistroLen, int Hlength)
+void printHg(int o, int dl, int hl)
 {
     int i;
-    int bars = calcBars(occur, DistroLen, Hlength);
+    int b = calcBars(o, dl, hl);
 
     printf("[");
 
-    for (i = 0; i < BAR_LENGTH; i++, bars--)
-        if (bars > 0)
+    for (i = 0; i < hl; i++, b--)
+        if (b > 0)
             printf("|");
         else
             printf(" ");
@@ -39,7 +39,7 @@ void printHg(int occur, int DistroLen, int Hlength)
     printf("]\n");
 }
 
-int calcBars(int occur, int DistroLen, int Hlength)
+int calcBars(int o, int dl, int hl)
 {
-    return (occur * Hlength) / DistroLen;
+    return (o * hl) / dl;
 }
