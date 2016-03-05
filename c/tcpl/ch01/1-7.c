@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define BAR_LENGTH 50
+#define HISTO_LEN 50
 
 void printHg(int occur, int DistroLen, int Hlength);
 int calcBars(int occur, int DistroLen, int Hlength);
@@ -20,7 +20,7 @@ main()
     }
 
     printf("\nWhitespace characters: %4d\tTotal characters: %4d\n", ws, nc);
-    printHg(ws, nc, BAR_LENGTH);
+    printHg(ws, nc, HISTO_LEN);
 }
 
 void printHg(int o, int dl, int hl)
