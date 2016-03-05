@@ -25,17 +25,16 @@ main()
 
 void printHg(int o, int dl, int hl)
 {
-    int i;
-    int b = calcBars(o, dl, hl);
+    int i, b;
+
+    b = calcBars(o, dl, hl);
 
     printf("[");
-
     for (i = 0; i < hl; i++, b--)
         if (b > 0)
             printf("|");
         else
             printf(" ");
-
     printf("]\n");
 }
 
