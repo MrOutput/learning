@@ -257,6 +257,7 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     char *line = NULL;
     size_t size = 0;
     ssize_t read;
+    int num;
 
     char *part = NULL;
 

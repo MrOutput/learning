@@ -11,13 +11,11 @@
 int main(const int argc, char *argv[])
 {
 
-
    if (argc < 2)
    {
       fprintf(stderr, "Please input a csv file name\n");
       exit(1);
    }
-   
    
    // file pointer
    FILE *fin;
@@ -31,15 +29,10 @@ int main(const int argc, char *argv[])
       return(-1);
    }
    
-   
-   
    int num_students, num_assignments, i, j,  total_count;
    
    // get size of data
    get_data_size(fin, &num_students, &num_assignments);
-
-
-
 
    // allocate memory
    int **grades = (int **)malloc(num_assignments * sizeof(int *));
@@ -64,9 +57,7 @@ int main(const int argc, char *argv[])
       }
    }
 
-   
    Statistics stats[num_assignments];
-
 
    // intialize arrays
    for (i = 0; i < num_assignments; i++)
@@ -78,11 +69,8 @@ int main(const int argc, char *argv[])
       for (j = 0; j < 11; j++)
          grades_scale[num_assignments][11] = 0;
    
-   
-   
    // get grades
    get_data(fin, num_students, num_assignments, grades);
-   
    
    // bin grades
    total_count = bin_grades(num_students , num_assignments, grades, grades_scale);
@@ -97,7 +85,7 @@ int main(const int argc, char *argv[])
    // get stats
    get_stats(num_students, num_assignments, grades, stats);
 
-   // display resutls
+   // display results
    display_grades_distribution(num_assignments, grades_scale, stats);
 
    return 0;
