@@ -222,38 +222,12 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
 
 }
 
-
-int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) {
-    int i = 0, j = 0;
-
-    printf("How many assignments are there? ");
-    scanf("%d", &assignments);
-
-    printf("How many students are in the class? ");
-    scanf("%d", &students);
-
-    int grades[students], grades_scale[11][assignments];
-
-    struct Stats stats[assignments];
-
-    //intialize array
-    for (i = 0; i < students; i++)
-     grades[i] = 0;
-
-
-    int total_count = 0;
-
-    // intialize array
-    for (i = 0; i < 11; i++)
-     for (j = 0; j < assignments; j++)
-        grades_scale[i][j] = 0;
+int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) 
+{
+    int i = 0, j = 0, total_count = 0;
 
     for (j = 0; j < assignments; j++)
     {
-     printf("Please enter the grades for %d students for assignment # %i:\n", students, j+1);
-
-     get_user_input(grades, students);
-     
      for (i = 0; i < students; i++)
      {
         if (grades[i] >= 93)
@@ -313,19 +287,32 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
         }
      }
 
-
      if (total_count != students)
      {
         printf("You missied something\n");
         return -1;
      }
 
-     total_count = 0;
-     stats[j].mean = calculate_mean(grades, students);
-     stats[j].std_dev = fsqrt(calculate_variance(grades, students));
-     stats[j].median = calculate_median(grades, students);
-     stats[j].min = calculate_min(grades,students);
-     stats[j].max = calculate_max(grades, students);
-     stats[j].num_of_students = students;
-
+     return total_count;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
