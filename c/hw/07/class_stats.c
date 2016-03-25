@@ -1,29 +1,24 @@
-/*
- * 
- *
- */
-
-
 #include <stdio.h>
+#include <math.h>
 
 // structure that holds the statistics for an assignment
-struct Stats
+typedef struct
 {
-   int min, max, num_of_students;
-   float mean, median, variance;
-};
+   int min , max, data_size;
+   float mean , median , std_dev ;
+} Statistics ;
 
 
 
 
 // sorts the values of an array in ascending order
-void  sort_a (int  a[], int  n)
+void sort_a (int a[], int n)
 {
-   int  i, j, temp;
+   int i, j, temp;
 
-   for ( i = 0;  i < n - 1;  ++i )
-      for ( j = i + 1;  j < n;  ++j )
-         if ( a[i] > a[j] ) 
+   for (i = 0; i < n - 1; ++i)
+      for (j = i + 1; j < n; ++j)
+         if (a[i] > a[j]) 
          {
             temp = a[i];
             a[i] = a[j];
@@ -108,19 +103,7 @@ int calculate_min(const int grades[], int n)
    return min;
 }
 
-// gets the grades of n students for an assignment from the user 
-void get_user_input(int grades[], int n)
-{
-   int i = 0;
-
-   for (i = 0; i < n; i++)
-   {
-      printf("Please enter the grade for student #%i: ", i+1);
-      scanf("%d", &grades[i]);
-   }
-}
-
-void display_grades_distribution(int m, const int grades_scale[11][m], struct Stats stats[])
+void display_grades_distribution(int m, const int grades_scale[11][m], struct Statistics stats[])
 {
 
    int i;
@@ -240,121 +223,109 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
 }
 
 
-//
-//
-//
-int main(void)
-{
-   int num_students, num_assignments;
-   int i = 0, j = 0;
+int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) {
+    int i = 0, j = 0;
 
-   printf("How  many assignments are there? ");
-   scanf("%d", &num_assignments);
+    printf("How many assignments are there? ");
+    scanf("%d", &assignments);
 
-   printf("How many students are in the class?  ");
-   scanf("%d", &num_students);
+    printf("How many students are in the class? ");
+    scanf("%d", &students);
 
-   int grades[num_students], grades_scale[11][num_assignments];
+    int grades[students], grades_scale[11][assignments];
 
-   struct Stats stats[num_assignments];
+    struct Stats stats[assignments];
 
-   //intialize array
-   for (i = 0; i < num_students; i++)
-      grades[i] = 0;
-   
-
-   int total_count = 0;
-
-   // intialize array
-   for (i = 0; i < 11; i++)
-      for (j = 0; j < num_assignments; j++)
-         grades_scale[i][j] = 0;
-   
-   for (j = 0; j < num_assignments; j++)
-   {
-      printf("Please enter the grades for %d students for assignment # %i:\n", num_students, j+1);
-
-      get_user_input(grades, num_students);
-      
-      for (i = 0; i < num_students; i++)
-      {
-         if (grades[i] >= 93)
-         {
-            grades_scale[0][j]++;
-            total_count++;
-         }
-         else if (grades[i]<= 92 && grades[i] >= 90)
-         {
-            grades_scale[1][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 89 && grades[i] >= 87)
-         {
-            grades_scale[2][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 86 && grades[i] >= 83)
-         {
-            grades_scale[3][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 82 && grades[i] >= 80)
-         {
-            grades_scale[4][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 79 && grades[i] >= 77)
-         {
-            grades_scale[5][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 76 && grades[i] >= 73)
-         {
-            grades_scale[6][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 72 && grades[i] >= 70)
-         {
-            grades_scale[7][j]++;
-            total_count++;
-         }
-         else if (grades[i]<= 69 && grades[i] >= 67)
-         {
-            grades_scale[8][j]++;
-            total_count++;
-         }
-         else if (grades[i] <= 66 && grades[i] >= 63)
-         {
-            grades_scale[9][j]++;
-            total_count++;
-         }
-         else
-         {
-            grades_scale[10][j]++;
-            total_count++;
-         }
-      }
+    //intialize array
+    for (i = 0; i < students; i++)
+     grades[i] = 0;
 
 
-      if (total_count != num_students)
-      {
-         printf("You missied something\n");
-         return -1;
-      }
+    int total_count = 0;
 
-      total_count = 0;
-      stats[j].mean = calculate_mean(grades, num_students);
-      stats[j].variance = calculate_variance(grades, num_students);
-      stats[j].median = calculate_median(grades, num_students);
-      stats[j].min = calculate_min(grades,num_students);
-      stats[j].max = calculate_max(grades, num_students);
-      stats[j].num_of_students = num_students;
+    // intialize array
+    for (i = 0; i < 11; i++)
+     for (j = 0; j < assignments; j++)
+        grades_scale[i][j] = 0;
 
-   }
-   
-   display_grades_distribution(num_assignments, grades_scale, stats);
+    for (j = 0; j < assignments; j++)
+    {
+     printf("Please enter the grades for %d students for assignment # %i:\n", students, j+1);
+
+     get_user_input(grades, students);
+     
+     for (i = 0; i < students; i++)
+     {
+        if (grades[i] >= 93)
+        {
+           grades_scale[0][j]++;
+           total_count++;
+        }
+        else if (grades[i]<= 92 && grades[i] >= 90)
+        {
+           grades_scale[1][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 89 && grades[i] >= 87)
+        {
+           grades_scale[2][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 86 && grades[i] >= 83)
+        {
+           grades_scale[3][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 82 && grades[i] >= 80)
+        {
+           grades_scale[4][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 79 && grades[i] >= 77)
+        {
+           grades_scale[5][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 76 && grades[i] >= 73)
+        {
+           grades_scale[6][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 72 && grades[i] >= 70)
+        {
+           grades_scale[7][j]++;
+           total_count++;
+        }
+        else if (grades[i]<= 69 && grades[i] >= 67)
+        {
+           grades_scale[8][j]++;
+           total_count++;
+        }
+        else if (grades[i] <= 66 && grades[i] >= 63)
+        {
+           grades_scale[9][j]++;
+           total_count++;
+        }
+        else
+        {
+           grades_scale[10][j]++;
+           total_count++;
+        }
+     }
 
 
+     if (total_count != students)
+     {
+        printf("You missied something\n");
+        return -1;
+     }
 
-   return 0;
+     total_count = 0;
+     stats[j].mean = calculate_mean(grades, students);
+     stats[j].std_dev = fsqrt(calculate_variance(grades, students));
+     stats[j].median = calculate_median(grades, students);
+     stats[j].min = calculate_min(grades,students);
+     stats[j].max = calculate_max(grades, students);
+     stats[j].num_of_students = students;
+
 }
