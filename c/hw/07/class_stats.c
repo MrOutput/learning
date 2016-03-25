@@ -8,9 +8,6 @@ typedef struct
    float mean , median , std_dev;
 } Statistics ;
 
-
-
-
 // sorts the values of an array in ascending order
 void sort_a (int a[], int n)
 {
@@ -338,8 +335,20 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
      return total_count;
 }
 
-
-
+// get stats
+void get_stats (int num_students, int assignments, int **grades, Statistics *stats)
+{
+	int j;
+		for(int j = 0; j < assignments; j++)
+		{
+		stats[j].mean = calculate_mean(grades, num_students);
+		stats[j].variance = calculate_variance(grades, num_students);
+	   	stats[j].median = calculate_median(grades, num_students);
+		stats[j].min = calculate_min(grades,num_students);    
+	 	stats[j].max = calculate_max(grades, num_students);
+		stats[j].data_size = num_students * assignments;
+		}
+}
 
 
 
