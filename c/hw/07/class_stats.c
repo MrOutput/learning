@@ -253,12 +253,19 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     size_t size = 0;
     ssize_t read;
 
+    char *part = NULL;
+
     int cur_line, cur_field;
     for (cur_line = 0, cur_field = 0; (read = getline(&line, &size, f)) != EOF; cur_field++)
         if (cur_line != 0)
-            while
+            while ((part = strtok()))
+            {
+                if ()
+                {
 
-
+                }
+                cur_field++;
+            }
 }
 
 
