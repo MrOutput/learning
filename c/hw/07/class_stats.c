@@ -5,7 +5,7 @@
 typedef struct
 {
    int min , max, data_size;
-   float mean , median , std_dev ;
+   float mean , median , std_dev;
 } Statistics ;
 
 
@@ -222,9 +222,51 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
 
 }
 
-int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) 
-{
-    int i = 0, j = 0, total_count = 0;
+void get_data_size(FILE *f, const int *s, const int *a) {
+    //while (there is a character)
+    //    if (character is a ',')
+    //        increment assignments
+    //    else if (character is a '\n')
+    //        reset assignments
+    //        increment student count;
+
+    int c;
+    while ((c = fgetc(f)) != EOF)
+        if (c == ',')
+            (*a)++;
+        else if (c == '\n')
+            (*a) = 0, (*s)++;
+}
+
+void get_data(FILE *p, const int s, const int a, int *grades[]) {
+    
+}
+
+
+int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) {
+    int i = 0, j = 0;
+
+    printf("How many assignments are there? ");
+    scanf("%d", &assignments);
+
+    printf("How many students are in the class? ");
+    scanf("%d", &students);
+
+    int grades[students], grades_scale[11][assignments];
+
+    struct Stats stats[assignments];
+
+    //intialize array
+    for (i = 0; i < students; i++)
+     grades[i] = 0;
+
+
+    int total_count = 0;
+
+    // intialize array
+    for (i = 0; i < 11; i++)
+     for (j = 0; j < assignments; j++)
+        grades_scale[i][j] = 0;
 
     for (j = 0; j < assignments; j++)
     {
