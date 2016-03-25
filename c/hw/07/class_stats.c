@@ -26,7 +26,7 @@ void sort_a (int a[], int n)
 }
 
 // calculates the mean of the elements of an array
-float calculate_mean(const int grades[], int n)
+float calculate_mean(const int *grades, int n)
 {
    int i;
    float sum = 0.0;
@@ -40,7 +40,7 @@ float calculate_mean(const int grades[], int n)
 }
 
 // calculates the variance of the emelemts of an array
-float calculate_variance(const int grades[], int n)
+float calculate_variance(const int *grades, int n)
 {
    int i;
    float sum = 0.0;
@@ -56,7 +56,7 @@ float calculate_variance(const int grades[], int n)
 }
 
 // calculates the median of the elemets of an arry
-float calculate_median(const int grades[], int n)
+float calculate_median(const int *grades, int n)
 {
    int i;
    int temp_array[n]; // temp array tp be manipulated
@@ -90,7 +90,7 @@ int calculate_max(const int grades[], int n)
 
 
 // finds the minimum value of the elements of an array
-int calculate_min(const int grades[], int n)
+int calculate_min(const int *grades, int n)
 {
    int min = 100, i;
 
@@ -101,7 +101,7 @@ int calculate_min(const int grades[], int n)
    return min;
 }
 
-void display_grades_distribution(int m, const int grades_scale[11][m], struct Statistics stats[])
+void display_grades_distribution(int m, const int grades_scale[11][m], Statistics stats[])
 {
 
    int i;
@@ -129,9 +129,9 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
       printf("%-10.2f", stats[i].median);
    printf("\n");
 
-   printf("%-25s", "Variance:");
+   printf("%-25s", "Standard Deviation:");
    for (i = 0; i < m; i++)
-      printf("%-10.2f", stats[i].variance);
+      printf("%-10.2f", stats[i].std_dev);
    printf("\n");
 
    printf("%-25s", "Min:");
@@ -144,10 +144,10 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
       printf("%-10d", stats[i].max);
    printf("\n");
 
-   printf("%-25s", "# of Students:");
-   for (i = 0; i < m; i++)
-      printf("%-10d", stats[i].num_of_students);
-   printf("\n");
+   //printf("%-25s", "# of Students:");
+   //for (i = 0; i < m; i++)
+   //   printf("%-10d", stats[i].num_of_students);
+   //printf("\n");
 
    for (i = 0; i < 25; i++)
       printf("=");
@@ -220,23 +220,30 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
 
 }
 
-void get_data_size(FILE *f, const int *s, const int *a) {
+void get_data_size(FILE *f, int *s, int *a) {
     //while (there is a character)
-    //    if (character is a ',')
-    //        increment assignments
-    //    else if (character is a '\n')
+    //    if (character is a '\n')
     //        reset assignments
     //        increment student count;
+    //    else if (character is a ',')
+    //        increment assignments
 
     int c;
     while ((c = fgetc(f)) != EOF)
-        if (c == ',')
-            (*a)++;
-        else if (c == '\n')
+    {
+        if (c == '\n')
             (*a) = 0, (*s)++;
+        else if (c == ',')
+            (*a)++;
+
+        fputc(c, stdout);
+    }
+
+    // TODO assignment count should be 10 but its 0 look into
+    printf("%d %d", *s, *a);
 }
 
-void get_data(FILE *f, const int s, const int a, int *grades[]) {
+void get_data(FILE *f, const int s, const int a, int **grades) {
     //while (there is a line)
     //{
     //    reset field counter
@@ -257,7 +264,6 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     char *line = NULL;
     size_t size = 0;
     ssize_t read;
-    int num;
 
     char *part = NULL;
 
@@ -267,14 +273,16 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
         cur_field = 0;
 
         if (cur_line != 0)
-            while ((part = strtok((cur_field == 0) ? read : NULL, ",")))
+            while ((*part = strtok(((cur_field == 0) ? (char *) read : NULL), ",")))
             {
                 if (cur_field != 0)
                 {
-                    *grades = atoi(part);
+                    **grades = atoi(*part);
                     grades++;
                 }
                 cur_field++;
+
+                *part = strtok(NULL, ",");
             }
     }
 }
@@ -283,78 +291,68 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
 int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) {
     int i = 0, j = 0;
 
-    printf("How many assignments are there? ");
-    scanf("%d", &assignments);
-
-    printf("How many students are in the class? ");
-    scanf("%d", &students);
-
-    int grades[students], grades_scale[11][assignments];
-
-    struct Stats stats[assignments];
-
     //intialize array
     for (i = 0; i < students; i++)
-     grades[i] = 0;
+        *grades[i] = 0;
 
 
     int total_count = 0;
 
     // intialize array
     for (i = 0; i < 11; i++)
-     for (j = 0; j < assignments; j++)
-        grades_scale[i][j] = 0;
+        for (j = 0; j < assignments; j++)
+            grades_scale[i][j] = 0;
 
     for (j = 0; j < assignments; j++)
     {
      for (i = 0; i < students; i++)
      {
-        if (grades[i] >= 93)
+        if (*grades[i] >= 93)
         {
            grades_scale[0][j]++;
            total_count++;
         }
-        else if (grades[i]<= 92 && grades[i] >= 90)
+        else if (*grades[i]<= 92 && *grades[i] >= 90)
         {
            grades_scale[1][j]++;
            total_count++;
         }
-        else if (grades[i] <= 89 && grades[i] >= 87)
+        else if (*grades[i] <= 89 && *grades[i] >= 87)
         {
            grades_scale[2][j]++;
            total_count++;
         }
-        else if (grades[i] <= 86 && grades[i] >= 83)
+        else if (*grades[i] <= 86 && *grades[i] >= 83)
         {
            grades_scale[3][j]++;
            total_count++;
         }
-        else if (grades[i] <= 82 && grades[i] >= 80)
+        else if (*grades[i] <= 82 && *grades[i] >= 80)
         {
            grades_scale[4][j]++;
            total_count++;
         }
-        else if (grades[i] <= 79 && grades[i] >= 77)
+        else if (*grades[i] <= 79 && *grades[i] >= 77)
         {
            grades_scale[5][j]++;
            total_count++;
         }
-        else if (grades[i] <= 76 && grades[i] >= 73)
+        else if (*grades[i] <= 76 && *grades[i] >= 73)
         {
            grades_scale[6][j]++;
            total_count++;
         }
-        else if (grades[i] <= 72 && grades[i] >= 70)
+        else if (*grades[i] <= 72 && *grades[i] >= 70)
         {
            grades_scale[7][j]++;
            total_count++;
         }
-        else if (grades[i]<= 69 && grades[i] >= 67)
+        else if (*grades[i]<= 69 && *grades[i] >= 67)
         {
            grades_scale[8][j]++;
            total_count++;
         }
-        else if (grades[i] <= 66 && grades[i] >= 63)
+        else if (*grades[i] <= 66 && *grades[i] >= 63)
         {
            grades_scale[9][j]++;
            total_count++;
@@ -364,6 +362,7 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
            grades_scale[10][j]++;
            total_count++;
         }
+      }
      }
 
      if (total_count != students)
@@ -376,34 +375,17 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
 }
 
 // get stats
-void get_stats (int num_students, int assignments, int **grades, Statistics *stats)
+void get_stats(int num_students, int assignments, int **grades, Statistics *stats)
 {
 	int j;
-		for(int j = 0; j < assignments; j++)
-		{
-		stats[j].mean = calculate_mean(grades, num_students);
-		stats[j].variance = calculate_variance(grades, num_students);
-	   	stats[j].median = calculate_median(grades, num_students);
-		stats[j].min = calculate_min(grades,num_students);    
-	 	stats[j].max = calculate_max(grades, num_students);
-		stats[j].data_size = num_students * assignments;
-		}
+
+    for(j = 0; j < assignments; j++)
+    {
+        stats[j].mean = calculate_mean(*grades, num_students);
+        stats[j].std_dev = sqrtf(calculate_variance(*grades, num_students));
+        stats[j].median = calculate_median(*grades, num_students);
+        stats[j].min = calculate_min(*grades,num_students);    
+        stats[j].max = calculate_max(*grades, num_students);
+        stats[j].data_size = num_students * assignments;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

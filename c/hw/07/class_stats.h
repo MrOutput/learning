@@ -4,8 +4,8 @@
 // structure that holds the statistics for an assignment
 typedef struct
 {
-   int min , max, data_size;
-   float mean , median , std_dev;
+   int min, max, data_size;
+   float mean, median, std_dev;
 } Statistics ;
 
 
