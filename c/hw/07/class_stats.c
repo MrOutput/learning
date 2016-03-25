@@ -9,9 +9,6 @@ typedef struct
    float mean, median, std_dev;
 } Statistics ;
 
-
-
-
 // sorts the values of an array in ascending order
 void sort_a (int a[], int n)
 {
@@ -292,10 +289,6 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
 
     for (j = 0; j < assignments; j++)
     {
-     printf("Please enter the grades for %d students for assignment # %i:\n", students, j+1);
-
-     get_user_input(grades, students);
-     
      for (i = 0; i < students; i++)
      {
         if (grades[i] >= 93)
@@ -355,19 +348,44 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
         }
      }
 
-
      if (total_count != students)
      {
         printf("You missied something\n");
         return -1;
      }
 
-     total_count = 0;
-     stats[j].mean = calculate_mean(grades, students);
-     stats[j].std_dev = fsqrt(calculate_variance(grades, students));
-     stats[j].median = calculate_median(grades, students);
-     stats[j].min = calculate_min(grades,students);
-     stats[j].max = calculate_max(grades, students);
-     stats[j].num_of_students = students;
-
+     return total_count;
 }
+
+// get stats
+void get_stats (int num_students, int assignments, int **grades, Statistics *stats)
+{
+	int j;
+		for(int j = 0; j < assignments; j++)
+		{
+		stats[j].mean = calculate_mean(grades, num_students);
+		stats[j].variance = calculate_variance(grades, num_students);
+	   	stats[j].median = calculate_median(grades, num_students);
+		stats[j].min = calculate_min(grades,num_students);    
+	 	stats[j].max = calculate_max(grades, num_students);
+		stats[j].data_size = num_students * assignments;
+		}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
