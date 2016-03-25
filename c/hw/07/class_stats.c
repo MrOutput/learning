@@ -26,7 +26,7 @@ void sort_a (int a[], int n)
 }
 
 // calculates the mean of the elements of an array
-float calculate_mean(const int grades[], int n)
+float calculate_mean(const int *grades, int n)
 {
    int i;
    float sum = 0.0;
@@ -40,7 +40,7 @@ float calculate_mean(const int grades[], int n)
 }
 
 // calculates the variance of the emelemts of an array
-float calculate_variance(const int grades[], int n)
+float calculate_variance(const int *grades, int n)
 {
    int i;
    float sum = 0.0;
@@ -56,7 +56,7 @@ float calculate_variance(const int grades[], int n)
 }
 
 // calculates the median of the elemets of an arry
-float calculate_median(const int grades[], int n)
+float calculate_median(const int *grades, int n)
 {
    int i;
    int temp_array[n]; // temp array tp be manipulated
@@ -77,7 +77,7 @@ float calculate_median(const int grades[], int n)
 }
 
 // finds the maximum value of the elements of an array
-int calculate_max(const int grades[], int n)
+int calculate_max(const int *grades, int n)
 {
    int max = 0, i;
    for (i = 0; i < n; i++)   
@@ -90,7 +90,7 @@ int calculate_max(const int grades[], int n)
 
 
 // finds the minimum value of the elements of an array
-int calculate_min(const int grades[], int n)
+int calculate_min(const int *grades, int n)
 {
    int min = 100, i;
 
@@ -257,7 +257,6 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     char *line = NULL;
     size_t size = 0;
     ssize_t read;
-    int num;
 
     char *part = NULL;
 
@@ -291,12 +290,9 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
 
     int grades[students], grades_scale[11][assignments];
 
-    struct Stats stats[assignments];
-
     //intialize array
     for (i = 0; i < students; i++)
      grades[i] = 0;
-
 
     int total_count = 0;
 
@@ -379,7 +375,7 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
 void get_stats (int num_students, int assignments, int **grades, Statistics *stats)
 {
 	int j;
-		for(int j = 0; j < assignments; j++)
+		for(j = 0; j < assignments; j++)
 		{
 		stats[j].mean = calculate_mean(grades, num_students);
 		stats[j].variance = calculate_variance(grades, num_students);
