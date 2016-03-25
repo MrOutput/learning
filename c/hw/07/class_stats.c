@@ -77,7 +77,7 @@ float calculate_median(const int *grades, int n)
 }
 
 // finds the maximum value of the elements of an array
-int calculate_max(const int grades[], int n)
+int calculate_max(const int *grades, int n)
 {
    int max = 0, i;
    for (i = 0; i < n; i++)   
@@ -294,7 +294,6 @@ int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]
     //intialize array
     for (i = 0; i < students; i++)
         *grades[i] = 0;
-
 
     int total_count = 0;
 
