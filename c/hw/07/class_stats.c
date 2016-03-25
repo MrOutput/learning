@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
@@ -52,7 +53,6 @@ float calculate_variance(const int grades[], int n)
    sum = sum/n - mean*mean;
 
    return sum;
-
 }
 
 // calculates the median of the elemets of an arry
@@ -238,8 +238,11 @@ void get_data_size(FILE *f, const int *s, const int *a) {
 
 void get_data(FILE *f, const int s, const int a, int *grades[]) {
     //while (there is a line)
+    //{
+    //    reset field counter
     //    if (not the first line in file)
     //        while (there is another field)
+    //        {
     //            if (string is not the first field)
     //            {
     //                convert string to integer equivalant
@@ -247,6 +250,8 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     //                increment grade pointer
     //            }
     //            increment field counter
+    //        }
+    //}
 
 
     char *line = NULL;
@@ -256,16 +261,21 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     char *part = NULL;
 
     int cur_line, cur_field;
-    for (cur_line = 0, cur_field = 0; (read = getline(&line, &size, f)) != EOF; cur_field++)
-        if (cur_line != 0)
-            while ((part = strtok()))
-            {
-                if ()
-                {
+    for (cur_line = 0, cur_field = 0; (read = getline(&line, &size, f)) != EOF; cur_line++)
+    {
+        cur_field = 0;
 
+        if (cur_line != 0)
+            while ((part = strtok((cur_field == 0) ? read : NULL, ",")))
+            {
+                if (cur_field != 0)
+                {
+                    *grades = atoi(part);
+                    grades++;
                 }
                 cur_field++;
             }
+    }
 }
 
 
