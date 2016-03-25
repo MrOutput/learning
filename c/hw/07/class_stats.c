@@ -273,16 +273,16 @@ void get_data(FILE *f, const int s, const int a, int **grades) {
         cur_field = 0;
 
         if (cur_line != 0)
-            while ((*part = strtok(((cur_field == 0) ? (char *) read : NULL), ",")))
+            while ((part = strtok(((cur_field == 0) ? (char *) read : NULL), ",")))
             {
                 if (cur_field != 0)
                 {
-                    **grades = atoi(*part);
+                    **grades = atoi(part);
                     grades++;
                 }
                 cur_field++;
 
-                *part = strtok(NULL, ",");
+                part = strtok(NULL, ",");
             }
     }
 }
