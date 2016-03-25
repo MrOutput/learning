@@ -5,7 +5,7 @@
 typedef struct
 {
    int min , max, data_size;
-   float mean , median , std_dev ;
+   float mean , median , std_dev;
 } Statistics ;
 
 
@@ -220,6 +220,26 @@ void display_grades_distribution(int m, const int grades_scale[11][m], struct St
       printf("%-10d", grades_scale[10][i]);
    printf("\n");
 
+}
+
+void get_data_size(FILE *f, const int *s, const int *a) {
+    //while (there is a character)
+    //    if (character is a ',')
+    //        increment assignments
+    //    else if (character is a '\n')
+    //        reset assignments
+    //        increment student count;
+
+    int c;
+    while ((c = fgetc(f)) != EOF)
+        if (c == ',')
+            (*a)++;
+        else if (c == '\n')
+            (*a) = 0, (*s)++;
+}
+
+void get_data(FILE *p, const int s, const int a, int *grades[]) {
+    
 }
 
 
