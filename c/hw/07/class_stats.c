@@ -252,6 +252,7 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
     char *line = NULL;
     size_t size = 0;
     ssize_t read;
+    int num;
 
     char *part = NULL;
 
@@ -262,7 +263,9 @@ void get_data(FILE *f, const int s, const int a, int *grades[]) {
             {
                 if ()
                 {
-
+		num = atoi(part);
+		*++a = num;
+		(*a)++; 
                 }
                 cur_field++;
             }
