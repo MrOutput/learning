@@ -8,7 +8,9 @@ struct csv_size {
 };
 
 void set_size(FILE *, struct csv_size *);
-void set_data(FILE *, int *);
+void set_data(FILE *, unsigned int *);
+
+float calc_avg(unsigned int *, const unsigned int *);
 
 
 
@@ -39,13 +41,15 @@ int main(int argc, char const* argv[])
     printf("rows %d, cols %d, total data size %d\n", csv_size.rows, csv_size.cols, DATA_SIZE);
 
 
-    int dist[DATA_SIZE];
+    unsigned int dist[DATA_SIZE];
     set_data(csv_file, dist);
 
     int i;
     for (i = 0; i < DATA_SIZE; i++)
         printf("%d ", dist[i]);
     printf("\n");
+
+    printf("avg: %.2f\n", calc_avg(dist, &DATA_SIZE));
 
 
     fclose(csv_file);
@@ -71,7 +75,7 @@ void set_size(FILE *f, struct csv_size *s)
     rewind(f);
 }
 
-void set_data(FILE *f, int *d)
+void set_data(FILE *f, unsigned int *d)
 {
     register unsigned int line_c, field_c;
 
@@ -87,4 +91,18 @@ void set_data(FILE *f, int *d)
                     *d++ = atoi(field);
 
     rewind(f);
+}
+
+float calc_avg(unsigned int *d, const unsigned int *n)
+{
+    if (*n == 0)
+        return 0.0;
+
+    int sum = 0;
+    int i;
+
+    for (i = *n; i--; sum += *d++)
+        ;
+
+    return sum / (float) *n;
 }
