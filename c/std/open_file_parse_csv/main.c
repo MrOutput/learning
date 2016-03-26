@@ -66,7 +66,7 @@ void set_size(FILE *f, struct csv_size *s)
         else if (col_flag == 0 && c == ',')
             s->cols++;
 
-    s->rows -= 1; // subtract header row
+    s->rows -= (s->rows) ? 1 : 0; // subtract header row
 
     rewind(f);
 }
