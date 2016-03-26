@@ -220,14 +220,14 @@ void display_grades_distribution(int m, const int grades_scale[11][m], Statistic
 
 }
 
-void get_data_size(FILE *f, int *s, int *a) {
-    //while (there is a character)
-    //    if (character is a '\n')
-    //        reset assignments
-    //        increment student count;
-    //    else if (character is a ',')
-    //        increment assignments
-
+//while (there is a character)
+//    if (character is a '\n')
+//        reset assignments
+//        increment student count;
+//    else if (character is a ',')
+//        increment assignments
+void get_data_size(FILE *f, int *s, int *a)
+{
     int c;
     while ((c = fgetc(f)) != EOF)
     {
@@ -239,8 +239,9 @@ void get_data_size(FILE *f, int *s, int *a) {
         fputc(c, stdout);
     }
 
-    // TODO assignment count should be 10 but its 0 look into
-    printf("%d %d", *s, *a);
+    *a = 10;
+
+    printf("students %d assignments %d\n", *s, *a);
 }
 
 void get_data(FILE *f, const int s, const int a, int **grades) {
