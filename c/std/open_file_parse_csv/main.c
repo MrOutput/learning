@@ -19,11 +19,9 @@ int main(int argc, char const* argv[])
     struct csv_size csv_size;
 
     set_size(csv_file, &csv_size);
-    const unsigned int DATA_SIZE = csv_size.rows * csv_size.cols - 1;
+    const unsigned int DATA_SIZE = (csv_size.rows > 0) ? csv_size.rows * csv_size.cols - 1 : 0;
 
     printf("rows %d, cols %d, total data size %d\n", csv_size.rows, csv_size.cols, DATA_SIZE);
-
-    rewind(csv_file);
 
 
     int dist[DATA_SIZE];
@@ -54,6 +52,8 @@ void set_size(FILE *f, struct csv_size *s)
             s->cols++;
 
     s->rows -= 1; // subtract header row
+
+    rewind(f);
 }
 
 void set_data(FILE *f, int *d)
@@ -70,4 +70,6 @@ void set_data(FILE *f, int *d)
             for (field_c = 0; (field = strtok((field_c == 0) ? line : NULL, ",")); field_c++)
                 if (field_c != 0)
                     *d++ = atoi(field);
+
+    rewind(f);
 }
