@@ -14,7 +14,22 @@ void set_data(FILE *, int *);
 
 int main(int argc, char const* argv[])
 {
-    FILE *csv_file = fopen("./grades.csv", "r");
+    if (argc == 1)
+    {
+        puts("specify csv file");
+        return EXIT_FAILURE;
+    }
+
+
+    FILE *csv_file = fopen(*++argv, "r");
+
+    if (!csv_file)
+    {
+        puts("error opening file");
+        return EXIT_FAILURE;
+    }
+
+
     
     struct csv_size csv_size;
 
@@ -34,7 +49,7 @@ int main(int argc, char const* argv[])
 
 
     fclose(csv_file);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void set_size(FILE *f, struct csv_size *s)
