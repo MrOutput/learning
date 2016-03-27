@@ -2,12 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct csv_size {
+struct grid_size {
     unsigned int rows;
     unsigned int cols;
 };
 
-void set_size(FILE *, struct csv_size *);
+void set_size(FILE *, struct grid_size *);
 void set_data(FILE *, unsigned int *);
 
 float calc_avg(unsigned int *, const unsigned int *);
@@ -33,7 +33,7 @@ int main(int argc, char const* argv[])
 
 
     
-    struct csv_size csv_size;
+    struct grid_size csv_size;
 
     set_size(csv_file, &csv_size);
     const unsigned int DATA_SIZE = (csv_size.rows > 0) ? csv_size.rows * csv_size.cols - 1 : 0;
@@ -44,11 +44,6 @@ int main(int argc, char const* argv[])
     unsigned int dist[DATA_SIZE];
     set_data(csv_file, dist);
 
-    int i;
-    for (i = 0; i < DATA_SIZE; i++)
-        printf("%d ", dist[i]);
-    printf("\n");
-
     printf("avg: %.2f\n", calc_avg(dist, &DATA_SIZE));
 
 
@@ -56,7 +51,9 @@ int main(int argc, char const* argv[])
     return EXIT_SUCCESS;
 }
 
-void set_size(FILE *f, struct csv_size *s)
+
+
+void set_size(FILE *f, struct grid_size *s)
 {
     int c;
     register int col_flag = 0;
