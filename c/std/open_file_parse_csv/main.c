@@ -2,13 +2,34 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct grid_size {
+struct data_size {
     unsigned int rows;
     unsigned int cols;
 };
 
-void set_size(FILE *, struct grid_size *);
-void set_data(FILE *, unsigned int *);
+enum assignment_types {
+    HOMEWORK, EXAM
+};
+
+typedef struct {
+    float average;
+
+    float *distribution;
+} Statistics;
+
+typedef struct {
+    char *name;
+    enum assignment_types type;
+
+    float *grades;
+    float weight;
+
+    Statistics stats;
+} Assignment;
+
+
+void set_size(FILE *, struct data_size *);
+void set_data(FILE *, Assignment *);
 
 float calc_avg(unsigned int *, const unsigned int *);
 
@@ -33,27 +54,33 @@ int main(int argc, char const* argv[])
 
 
     
-    struct grid_size csv_size;
+    struct data_size csv_size;
 
     set_size(csv_file, &csv_size);
-    const unsigned int DATA_SIZE = (csv_size.rows > 0) ? csv_size.rows * csv_size.cols - 1 : 0;
-
-    printf("rows %d, cols %d, total data size %d\n", csv_size.rows, csv_size.cols, DATA_SIZE);
 
 
-    unsigned int dist[DATA_SIZE];
-    set_data(csv_file, dist);
 
-    printf("avg: %.2f\n", calc_avg(dist, &DATA_SIZE));
+    Assignment *assignments = NULL;
+
+    assignments = (Assignment *) malloc(csv_size.cols * sizeof(Assignment));
 
 
+
+    set_data(csv_file, assignments);
+
+
+
+
+    free(assignments);
     fclose(csv_file);
+
+
     return EXIT_SUCCESS;
 }
 
 
 
-void set_size(FILE *f, struct grid_size *s)
+void set_size(FILE *f, struct data_size *s)
 {
     int c;
     register int col_flag = 0;
@@ -72,8 +99,40 @@ void set_size(FILE *f, struct grid_size *s)
     rewind(f);
 }
 
-void set_data(FILE *f, unsigned int *d)
+void set_data(FILE *f, Assignment *a, unsigned int assignments_length)
 {
+    //while (there is an assignment)
+    //    malloc size for assignment grades
+    //    while (there is a line)
+    //        if (first line);
+    //            save field to name
+    //            set assignment type
+    //        else
+    //            save field to grade
+    //            increment grade pointer;
+    //    rewind file
+    //
+
+    register unsigned int line_c, a_counter, i;
+
+    assignment_counter = assignments_length;
+
+    char *line = NULL;
+    size_t size = 0;
+
+    for (i = 0; i < assignments_length; i++)
+    {
+        a->grades = (float *) malloc(number of cols * sizeof(float));
+
+        for (line_c = 0; getline(&line, &size, f) != EOF; line_c++)
+            if (line_c == 0)
+            {
+                a->name = get_field(line, i + 1);
+                a->type = 
+    }
+            
+
+
     register unsigned int line_c, field_c;
 
     char *line = NULL;
@@ -85,7 +144,7 @@ void set_data(FILE *f, unsigned int *d)
         if (line_c != 0)
             for (field_c = 0; (field = strtok((field_c == 0) ? line : NULL, ",")); field_c++)
                 if (field_c != 0)
-                    *d++ = atoi(field);
+                    *a++ = atoi(field);
 
     rewind(f);
 }
