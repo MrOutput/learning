@@ -220,72 +220,61 @@ void display_grades_distribution(int m, const int grades_scale[11][m], Statistic
 
 }
 
-//while (there is a character)
-//    if (character is a '\n')
-//        reset assignments
-//        increment student count;
-//    else if (character is a ',')
-//        increment assignments
+
 void get_data_size(FILE *f, int *s, int *a)
 {
     int c;
+    int col_flag = 0;
+
+    *s = 0;
+    *a = 0;
+
     while ((c = fgetc(f)) != EOF)
-    {
         if (c == '\n')
-            (*a) = 0, (*s)++;
-        else if (c == ',')
-            (*a)++;
+            col_flag = 1, ++*s;
+        else if (col_flag == 0 && c == ',')
+            ++*a;
 
-        fputc(c, stdout);
-    }
+    *s -= (*s > 0); // subtract header row if length
 
-    *a = 10;
-
-    printf("students %d assignments %d\n", *s, *a);
+    rewind(f);
 }
 
+
 void get_data(FILE *f, const int s, const int a, int **grades) {
-    //while (there is a line)
-    //{
-    //    reset field counter
-    //    if (not the first line in file)
-    //        while (there is another field)
-    //        {
-    //            if (string is not the first field)
-    //            {
-    //                convert string to integer equivalant
-    //                store integer in grades array
-    //                increment grade pointer
-    //            }
-    //            increment field counter
-    //        }
-    //}
-
-
     char *line = NULL;
-    size_t size = 0;
-    ssize_t read;
+    char *field = NULL;
 
-    char *part = NULL;
+    size_t line_size = 0;
 
-    int cur_line, cur_field;
-    for (cur_line = 0, cur_field = 0; (read = getline(&line, &size, f)) != EOF; cur_line++)
+
+    int assignment_count;
+    int line_count;
+    int field_count;
+
+    for (assignment_count = 0; assignment_count < a; assignment_count++)
     {
-        cur_field = 0;
-
-        if (cur_line != 0)
-            while ((part = strtok(((cur_field == 0) ? (char *) read : NULL), ",")))
-            {
-                if (cur_field != 0)
+        for (line_count = 0; getline(&line, &line_size, f) != EOF; line_count++)
+        {
+            if (line_count != 0)
+                for (field_count = 0; (field = strtok((field_count == 0) ? line : NULL, ",")); field_count++)
                 {
-                    **grades = atoi(part);
-                    grades++;
-                }
-                cur_field++;
+                    if (field_count == assignment_count + 1)
+                    {
+                        **grades = atoi(field);
+                        (*grades)++;
+                        break;
+                    }
 
-                part = strtok(NULL, ",");
-            }
+                    (*grades)++;
+                }
+        }
+
+        grades++;
+        rewind(f);
     }
+
+    rewind(f);
 }
 
 

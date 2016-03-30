@@ -38,7 +38,7 @@ int main(const int argc, char *argv[])
    int **grades = (int **)malloc(num_assignments * sizeof(int *));
    for (i = 0; i < num_assignments; i++)
    {
-      grades[i] = (int *)malloc(num_students * sizeof(int));
+      grades[i] = (int *) malloc(num_students * sizeof(int));
       if (grades[i] == NULL)
       {
          fprintf(stderr, "Not enough memory to allocate\n");
@@ -46,10 +46,10 @@ int main(const int argc, char *argv[])
       }
    }
    
-   int **grades_scale = (int **)malloc(num_assignments * sizeof(int *));
+   int **grades_scale = (int **) malloc(num_assignments * sizeof(int *));
    for (i = 0; i  < num_assignments; i++)
    {
-      grades_scale[i] = (int *) malloc(11 * sizeof(int));
+      grades_scale[i] = (int *) calloc(11, sizeof(int));
       if (grades_scale[i] == NULL)
       {
          fprintf(stderr, "Not enough memory to allocate\n");
@@ -64,10 +64,6 @@ int main(const int argc, char *argv[])
       for (j = 0; j < num_students; j++)
          grades[i][j] = 0;
    
-   
-   for (i = 0; i < num_assignments; i++)
-      for (j = 0; j < 11; j++)
-         grades_scale[num_assignments][11] = 0;
    
    // get grades
    get_data(fin, num_students, num_assignments, grades);
