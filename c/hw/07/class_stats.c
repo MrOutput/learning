@@ -281,78 +281,69 @@ void get_data(FILE *f, const int s, const int a, int **grades) {
 int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) {
     int i = 0, j = 0;
 
-    //intialize array
-    for (i = 0; i < students; i++)
-        *grades[i] = 0;
-
     int total_count = 0;
-
-    // intialize array
-    for (i = 0; i < 11; i++)
-        for (j = 0; j < assignments; j++)
-            grades_scale[i][j] = 0;
 
     for (j = 0; j < assignments; j++)
     {
-     for (i = 0; i < students; i++)
-     {
-        if (*grades[i] >= 93)
+        for (i = 0; i < students; i++)
         {
-           grades_scale[0][j]++;
-           total_count++;
+            if (grades[j][i] >= 93)
+            {
+                grades_scale[j][0]++;
+                total_count++;
+            }
+            else if (grades[j][i]<= 92 && grades[j][i] >= 90)
+            {
+                grades_scale[j][1]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 89 && grades[j][i] >= 87)
+            {
+                grades_scale[j][2]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 86 && grades[j][i] >= 83)
+            {
+                grades_scale[j][3]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 82 && grades[j][i] >= 80)
+            {
+                grades_scale[j][4]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 79 && grades[j][i] >= 77)
+            {
+                grades_scale[j][5]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 76 && grades[j][i] >= 73)
+            {
+                grades_scale[j][6]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 72 && grades[j][i] >= 70)
+            {
+                grades_scale[j][7]++;
+                total_count++;
+            }
+            else if (grades[j][i]<= 69 && grades[j][i] >= 67)
+            {
+                grades_scale[j][8]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 66 && grades[j][i] >= 63)
+            {
+                grades_scale[j][9]++;
+                total_count++;
+            }
+            else
+            {
+                grades_scale[j][10]++;
+                total_count++;
+            }
         }
-        else if (*grades[i]<= 92 && *grades[i] >= 90)
-        {
-           grades_scale[1][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 89 && *grades[i] >= 87)
-        {
-           grades_scale[2][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 86 && *grades[i] >= 83)
-        {
-           grades_scale[3][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 82 && *grades[i] >= 80)
-        {
-           grades_scale[4][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 79 && *grades[i] >= 77)
-        {
-           grades_scale[5][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 76 && *grades[i] >= 73)
-        {
-           grades_scale[6][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 72 && *grades[i] >= 70)
-        {
-           grades_scale[7][j]++;
-           total_count++;
-        }
-        else if (*grades[i]<= 69 && *grades[i] >= 67)
-        {
-           grades_scale[8][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 66 && *grades[i] >= 63)
-        {
-           grades_scale[9][j]++;
-           total_count++;
-        }
-        else
-        {
-           grades_scale[10][j]++;
-           total_count++;
-        }
-      }
-     }
+    }
 
      if (total_count != students)
      {
