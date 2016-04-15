@@ -220,150 +220,130 @@ void display_grades_distribution(int m, const int grades_scale[11][m], Statistic
 
 }
 
-//while (there is a character)
-//    if (character is a '\n')
-//        reset assignments
-//        increment student count;
-//    else if (character is a ',')
-//        increment assignments
+
 void get_data_size(FILE *f, int *s, int *a)
 {
     int c;
+    int col_flag = 0;
+
+    *s = 0;
+    *a = 0;
+
     while ((c = fgetc(f)) != EOF)
-    {
         if (c == '\n')
-            (*a) = 0, (*s)++;
-        else if (c == ',')
-            (*a)++;
+            col_flag = 1, ++*s;
+        else if (col_flag == 0 && c == ',')
+            ++*a;
 
-        fputc(c, stdout);
-    }
+    *s -= (*s > 0); // subtract header row if length
 
-    *a = 10;
-
-    printf("students %d assignments %d\n", *s, *a);
+    rewind(f);
 }
 
+
 void get_data(FILE *f, const int s, const int a, int **grades) {
-    //while (there is a line)
-    //{
-    //    reset field counter
-    //    if (not the first line in file)
-    //        while (there is another field)
-    //        {
-    //            if (string is not the first field)
-    //            {
-    //                convert string to integer equivalant
-    //                store integer in grades array
-    //                increment grade pointer
-    //            }
-    //            increment field counter
-    //        }
-    //}
-
-
     char *line = NULL;
-    size_t size = 0;
-    ssize_t read;
+    char *field = NULL;
 
-    char *part = NULL;
+    size_t line_size = 0;
 
-    int cur_line, cur_field;
-    for (cur_line = 0, cur_field = 0; (read = getline(&line, &size, f)) != EOF; cur_line++)
+
+    int assignment_count;
+    int line_count;
+    int field_count;
+
+    for (assignment_count = 0; assignment_count < a; assignment_count++)
     {
-        cur_field = 0;
-
-        if (cur_line != 0)
-            while ((part = strtok(((cur_field == 0) ? (char *) read : NULL), ",")))
-            {
-                if (cur_field != 0)
+        for (line_count = 0; getline(&line, &line_size, f) != EOF; line_count++)
+        {
+            if (line_count != 0)
+                for (field_count = 0; (field = strtok((field_count == 0) ? line : NULL, ",")); field_count++)
                 {
-                    **grades = atoi(part);
-                    grades++;
-                }
-                cur_field++;
+                    if (field_count == assignment_count + 1)
+                    {
+                        **grades = atoi(field);
+                        (*grades)++;
+                        break;
+                    }
 
-                part = strtok(NULL, ",");
-            }
+                    (*grades)++;
+                }
+        }
+
+        grades++;
+        rewind(f);
     }
+
+    rewind(f);
 }
 
 
 int bin_grades(int students, int assignments, int *grades[], int *grades_scale[]) {
     int i = 0, j = 0;
 
-    //intialize array
-    for (i = 0; i < students; i++)
-        *grades[i] = 0;
-
     int total_count = 0;
-
-    // intialize array
-    for (i = 0; i < 11; i++)
-        for (j = 0; j < assignments; j++)
-            grades_scale[i][j] = 0;
 
     for (j = 0; j < assignments; j++)
     {
-     for (i = 0; i < students; i++)
-     {
-        if (*grades[i] >= 93)
+        for (i = 0; i < students; i++)
         {
-           grades_scale[0][j]++;
-           total_count++;
+            if (grades[j][i] >= 93)
+            {
+                grades_scale[j][0]++;
+                total_count++;
+            }
+            else if (grades[j][i]<= 92 && grades[j][i] >= 90)
+            {
+                grades_scale[j][1]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 89 && grades[j][i] >= 87)
+            {
+                grades_scale[j][2]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 86 && grades[j][i] >= 83)
+            {
+                grades_scale[j][3]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 82 && grades[j][i] >= 80)
+            {
+                grades_scale[j][4]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 79 && grades[j][i] >= 77)
+            {
+                grades_scale[j][5]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 76 && grades[j][i] >= 73)
+            {
+                grades_scale[j][6]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 72 && grades[j][i] >= 70)
+            {
+                grades_scale[j][7]++;
+                total_count++;
+            }
+            else if (grades[j][i]<= 69 && grades[j][i] >= 67)
+            {
+                grades_scale[j][8]++;
+                total_count++;
+            }
+            else if (grades[j][i] <= 66 && grades[j][i] >= 63)
+            {
+                grades_scale[j][9]++;
+                total_count++;
+            }
+            else
+            {
+                grades_scale[j][10]++;
+                total_count++;
+            }
         }
-        else if (*grades[i]<= 92 && *grades[i] >= 90)
-        {
-           grades_scale[1][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 89 && *grades[i] >= 87)
-        {
-           grades_scale[2][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 86 && *grades[i] >= 83)
-        {
-           grades_scale[3][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 82 && *grades[i] >= 80)
-        {
-           grades_scale[4][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 79 && *grades[i] >= 77)
-        {
-           grades_scale[5][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 76 && *grades[i] >= 73)
-        {
-           grades_scale[6][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 72 && *grades[i] >= 70)
-        {
-           grades_scale[7][j]++;
-           total_count++;
-        }
-        else if (*grades[i]<= 69 && *grades[i] >= 67)
-        {
-           grades_scale[8][j]++;
-           total_count++;
-        }
-        else if (*grades[i] <= 66 && *grades[i] >= 63)
-        {
-           grades_scale[9][j]++;
-           total_count++;
-        }
-        else
-        {
-           grades_scale[10][j]++;
-           total_count++;
-        }
-      }
-     }
+    }
 
      if (total_count != students)
      {
