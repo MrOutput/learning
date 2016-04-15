@@ -13,7 +13,7 @@ func main() {
 			for i := 1; i < 1000; i *= 2 {
 				fmt.Printf("%d\n", i)
 			}
-			wg.Done()
+			defer wg.Done()
 			fmt.Println("Goroutine done...")
 		}()
 	}
