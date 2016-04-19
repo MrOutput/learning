@@ -1,13 +1,16 @@
 #include <iostream>
 #include <thread>
 
-#define TPOOL_SIZE 10000
+#define TPOOL_SIZE 2
+#define TOTAL_ITERATIONS 10000
 
 using namespace std;
 
 void loop(void) {
-    for (int i = 1; i < 1000; i*=2) {
-        cout << i << endl;
+    for (int j = 0; j < TOTAL_ITERATIONS / TPOOL_SIZE; j++) {
+        for (int i = 1; i < 1000; i*=2) {
+            cout << i << endl;
+        }
     }
 
     cout << "thread finished." << endl;
