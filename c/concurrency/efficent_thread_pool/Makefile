@@ -1,3 +1,3 @@
 default:
-	cc -pthread -O2 -march=native thread_pool.c
+	cc -pthread -Os -march=native thread_pool.c
 	strip a.out
