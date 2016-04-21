@@ -2,6 +2,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <unistd.h>
+
 
 int main(int argc, char *argv[]) {
     int udp_socket = socket(AF_INET, SOCK_DGRAM, 0);
@@ -19,7 +21,10 @@ int main(int argc, char *argv[]) {
     if (connection == 0) {
         char message[] = "Whats up man!";
 
-        send(udp_socket, (void *) message, sizeof message, MSG_WAITALL);
+        while (1) {
+            send(udp_socket, (void *) message, sizeof message, MSG_WAITALL);
+            sleep(2);
+        }
         shutdown(udp_socket, 2);
     } else {
         return 1;
