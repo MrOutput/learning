@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define IMG_DIR "./images"
 
@@ -25,7 +26,16 @@ int main(int argc, char const* argv[])
         char *linep = NULL;
         size_t lsize = 0;
         while (getline(&linep, &lsize, imgdatap) != EOF) {
-            printf("LINE: %s\n", linep);
+            // tokenize and parse line
+            char *tokenp = NULL;
+            for (char *ln = linep; ; ln = NULL) {
+                if ((tokenp = strtok(ln, " ")) == NULL) {
+                    break;
+                }
+                // do something with token
+
+                printf("%8d ", atoi(tokenp));
+            }
         }
 
         fclose(imgdatap);
