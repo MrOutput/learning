@@ -3,7 +3,10 @@ var rows = [
     ["torvalds","linus"]
 ];
 
+// state vars
 var ads = document.getElementById("advertisements");
+var search_el = document.getElementById("search");
+var search_state = false;
 
 // make elmts
 for (let irows = 0, lrows = rows.length, cols; irows < lrows; irows++) {
@@ -23,32 +26,33 @@ for (let irows = 0, lrows = rows.length, cols; irows < lrows; irows++) {
     ads.appendChild(ul);
 }
 
-var fst = ads.querySelector("ul>li:first-of-type");
+var list_el = ads.querySelectorAll("ul li");
 
-select(fst);
+select(list_el, cur_selected);
+console.log(list_el);
 
 
-var searche = document.getElementById("search");
-var search = false;
 // logic
 document.onkeydown = function (e) {
     console.log(e.which);
     // j
-    if (search === true) {
+    if (search_state === true) {
         //esc
         if (e.which === 27) {
             console.log("asonetuasnotehu");
-            remove_class(searche, "show");
-            search = false;
+            remove_class(search_el, "show");
+            search_state = false;
             return;
         }
-        console.log(searche);
-        searche.innerHTML += e.which.toString();
+        console.log(search_el);
+        search_el.innerHTML += String.fromCharCode(e.which);
         console.log(e);
     } else {
         switch (e.which) {
             case 40: // down arrow
             case 74: // j
+                cur_selected++;
+                select(list_el, cur_selected);
                 console.log("highlight item below");
                 break;
             case 38: // up arrow
@@ -65,18 +69,24 @@ document.onkeydown = function (e) {
                 console.log("highlight next search item");
                 break;
             case 191: // '/'
-                add_class(searche, "show");
-                search = true;
-                console.log(search);
+                add_class(search_el, "show");
+                search_state = true;
+                console.log(search_state);
                 console.log("search ads");
                 break;
         }
     }
 };
 
-function select(el) {
+var cur_selected = 0;
+function select(list, index) {
+    var el = list[index];
     el.setAttribute("data-selected", true);
     el.className += "selected";
+}
+
+function select_next() {
+    
 }
 
 function add_class(el, classname) {
