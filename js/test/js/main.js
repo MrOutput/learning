@@ -24,8 +24,9 @@
     }
 
 
-    var list_el = ads.querySelectorAll("ul li");
-    select(list_el, cur_selected);
+    list_el = ads.querySelectorAll("ul li");
+    console.log(list_el);
+    select_ad(cur_selected);
 
 
     document.onkeydown = function (e) {
@@ -46,12 +47,12 @@
             switch (e.which) {
                 case 40: // down arrow
                 case 74: // j
-                    cur_selected++;
-                    select(list_el, cur_selected);
+                    select_next_ad();
                     console.log("highlight item below");
                     break;
                 case 38: // up arrow
                 case 75: // k
+                    select_prev_ad();
                     console.log("highlight item above");
                     break;
                 case 27: // esc
