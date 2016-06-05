@@ -1,15 +1,19 @@
-static int power(int num, int pow) {
-    int cur = num;
-
-    while (pow > 1) {
-        cur *= num;
-        pow--;
+static int power(int base, int exp) {
+    if (exp == 0) {
+        return 1;
     }
 
-    return  cur;
+    int ans = base;
+
+    while (exp > 1) {
+        ans *= base;
+        exp--;
+    }
+
+    return  ans;
 }
 
 int main(void)
 {
-    return power(3, 3);
+    return power(3, 0);
 }

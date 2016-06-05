@@ -4,8 +4,8 @@
 .globl _start
 
 _start:
-	pushq	$3		# second arg, POW
-	pushq	$2		# first arg, NUM
+	pushq	$0		# second arg, exp
+	pushq	$2		# first arg, base
 	call	power
 	addq	$16,	%rsp	# remove the 2 args from the stack
 
@@ -19,12 +19,12 @@ _start:
 #
 # ARGS
 #	NUM
-#	POW
+#	exp
 #
 # VARIABLES
-# 	NUM %num
-#	POW %rbx
-#	CUR %rax
+# 	BASE %num
+#	EXP %rbx
+#	ANS %rax
 #
 # RETURNS
 #	answer
@@ -33,16 +33,20 @@ power:
 	pushq	%rbp				# save the base pointer of caller
 	mov	%rsp,		%rbp		# make the top of the stack the base for this function 
 
-	movq	16(%rbp),	%rcx		# load NUM
-	movq	24(%rbp),	%rbx		# load POW
-	movq	%rcx,		%rax		# init CUR
+	movq	16(%rbp),	%rcx		# load base
+	movq	24(%rbp),	%rbx		# load exp
+	cmpq	$0,		%rbx
+	movq	$1,		%rax
+	je	exit
+	movq	%rcx,		%rax		# init ANS
 
 loop:
-	imulq	%rcx, %rax			# NUM * CUR = CUR
+	imulq	%rcx, %rax			# BASE * ANS = ANS
 	decq	%rbx
-	cmpq	$1,	%rbx			# test POW === 1
+	cmpq	$1,	%rbx			# test exp === 1
 	jne	loop				# if false loop again else return answer
 	
+exit:
 	movq	%rbp, %rsp	# make bottom of stack the top of the stack
 	popq	%rbp		# restore the base pointer of the caller
 	ret			# return to caller
