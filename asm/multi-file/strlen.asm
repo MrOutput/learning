@@ -15,12 +15,13 @@ strlen:
 	mov rsi, 0
 
 .compare:
-	cmp dl, '\0'
+	cmp dl, `\0`
 	je .done
 
 .next_byte:
 	inc rsi
 	mov dl, [r11 + rsi * 1]
+	jmp .compare
 
 .done:
 	mov rax, rsi

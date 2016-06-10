@@ -4,6 +4,7 @@ SECTION .data
 SECTION .text
 GLOBAL _start
 EXTERN print
+EXTERN exit
 
 _start:
 	push rbp
@@ -13,7 +14,5 @@ _start:
 	call print
 	add rsp, 8
 
-	;exit
-	mov rax, 60
-	mov rdi, 0
-	syscall
+	push 0
+	call exit

@@ -15,7 +15,7 @@ print:
 
 	push rsi ;char* arg
 	call strlen
-	add rsp, 8
+	pop rsi
 
 	mov rdx, rax ;set size from ret val
 	mov rax, SYS_WRITE
