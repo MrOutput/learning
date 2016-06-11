@@ -5,10 +5,7 @@ format: DB `Len: %d\n`
 SECTION .text
 EXIT_SUCCESS EQU 0
 GLOBAL _start
-EXTERN puts
-EXTERN strlen
-EXTERN exit
-EXTERN printf
+EXTERN puts, strlen, exit, printf
 
 ;SysV Calling Convention
 _start:	mov rdi,  greeting
