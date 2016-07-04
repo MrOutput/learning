@@ -11,13 +11,13 @@ step	org	ylw	pnk	blu
 6		0	0	0	1
 7		1	0	0	1
 
-code	num	pin
-ORG 	0x8	11
-YLW		0x4	10
-PNK		0x2	9
-BLU		0x1	8
+code    num	pin
+ORG     0x08 11
+YLW     0x04 10
+PNK     0x02 9
+BLU     0x01 8
 */
-#define ORG 0x8
+#define ORG 0x08
 #define STEPS 8
 #define WIRES 4
 
