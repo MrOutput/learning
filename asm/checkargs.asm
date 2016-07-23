@@ -1,5 +1,5 @@
 SECTION .DATA
-NO_ARGS: DB "no args.", 10
+NO_ARGS:	DB	"no args.", 10
 .LENGTH:	EQU	$ - NO_ARGS
 
 SECTION .TEXT
