@@ -1,23 +1,19 @@
+/*
+PWD: Mode 5 (phase correct)
+CLKt0: CLKio / 8
+Duty Cycle: 50%
+
+Toggle OC0A on match
+*/
 #include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/sleep.h>
-
-
-ISR(TIMER0_COMPA_vect)
-{
-    OCR0A++;
-}
-
 
 int main(void)
 {
-    DDRD = _BV(DDD6);
-    TCCR0A = _BV(WGM00);//PHASE CORRECT PWM MODE 1
-    TIMSK0 = _BV(OCIE0A);
-    OCR0A = 0x00;//INIT PWM TOP
-    sei();
+    TCCR0A = _BV(WGM00) | _BV(COM0A0);
+    TCCR0B = _BV(CS01) | _BV(WGM02);
+    OCR0A = 0xFF >> 1;
 
-    for (;;) {
-        sleep_mode();
-    }
+    DDRD = _BV(DDD6);
+
+    while (1);
 }
