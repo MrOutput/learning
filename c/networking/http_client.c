@@ -16,9 +16,9 @@ int main(void)
                  "\n";
     write(client, req, sizeof req);
 
-    char resp[100];
-    while (read(client, &resp, sizeof resp)) {
-        printf("%s", resp);
+    char buf[128];
+    while (read(client, buf, sizeof buf)) {
+        printf("%.128s", buf);
     }
 
     close(client);
