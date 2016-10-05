@@ -1,11 +1,6 @@
-#include <unistd.h>
 #define STDOUT 1
 #define STDIN 0
 #define OFFSET 0x20
-
-static void print(char *buf, int size) {
-    write(STDOUT, buf, size);
-}
 
 static void toupper(char *buf, int size) {
     register int i;
@@ -17,22 +12,33 @@ static void toupper(char *buf, int size) {
     }
 }
 
-static int myread(int fd, char *buf, int size) {
+static int write(int fd, char *buf, int size) {
     register int bytes;
 
     asm(
-    "movq $0, %%rax\n"
+    "syscall"
 
-    "movl %1, %%edi\n"
-    "movq %2, %%rsi\n"
-    "movl %3, %%edx\n"
-    "syscall\n"
+    : "=a" (bytes)
+    : "D" (fd), "S" (buf), "d" (size), "a" (1)
+    : "rcx", "r11", "memory", "cc"
+    );
 
-    "movq %%rax, %0"
+    return bytes;
+}
 
-    : "=r" (bytes)
-    : "m" (fd), "m" (buf), "m" (size)
-    : "%rax", "%rdi", "%rsi", "%rdx"
+static void print(char *buf, int size) {
+    write(STDOUT, buf, size);
+}
+
+static int read(int fd, char *buf, int size) {
+    register int bytes;
+
+    asm(
+    "syscall"
+
+    : "=a" (bytes)
+    : "D" (fd), "S" (buf), "d" (size), "a" (0)
+    : "rcx", "r11", "memory", "cc"
     );
 
     return bytes;
@@ -41,7 +47,7 @@ static int myread(int fd, char *buf, int size) {
 static int readAndTransform(char *buf, int size) {
     register int bytes;
 
-    bytes = myread(STDIN, buf, size);
+    bytes = read(STDIN, buf, size);
     toupper(buf, bytes);
 
     if (bytes > 1) {
@@ -53,12 +59,9 @@ static int readAndTransform(char *buf, int size) {
 
 void myexit(int code) {
     asm(
-    "movq $60, %%rax\n"
-    "movq %0, %%rdi\n"
     "syscall"
     :
-    : "m" (code)
-    : "%rax", "%rdi"
+    : "a" (60), "D" (0)
     );
 }
 
