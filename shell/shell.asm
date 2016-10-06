@@ -4,7 +4,7 @@
 ;repeat
 
 %define BUF_SZ 2048
-%define OFFSET 'a'-'A'
+%define OFFSET 20H
 
 SECTION .text
 GLOBAL _start
@@ -22,15 +22,31 @@ _start:
 	syscall
 
 	cmp rax, 0
-	jnz _start
+	je exit
 
+	cmp rax, 1
+	je _start
+
+	push rax
+	mov rdi, buf
+	mov rsi, rax
+	call toupper
+	pop rax
+
+	mov rdi, buf
+	mov rsi, rax
+	call print
+	
+
+	jmp _start
+
+exit:
 	push qword 0AH
 	mov rdi, rsp
 	mov rsi, 1
 	call print
 	pop rax
 
-exit:
 	mov rax, 60
 	xor rdi, rdi
 	syscall
@@ -44,7 +60,26 @@ print:
 	syscall
 	ret
 
-.done:
+;void toupper(void *buf, int size)
+toupper:
+	xor rcx, rcx
+
+.loop:
+	mov al, byte [rdi + rcx]
+
+	cmp al, 'a'
+	jl .next
+	cmp al, 'z'
+	jg .next
+
+	sub al, OFFSET
+	mov byte [rdi + rcx], al
+
+.next:
+	inc rcx
+	cmp rcx, rsi
+	jl .loop
+
 	ret
 
 
