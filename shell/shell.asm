@@ -62,10 +62,10 @@ print:
 
 ;void toupper(void *buf, int size)
 toupper:
-	xor rcx, rcx
+	dec rsi
 
 .loop:
-	mov al, byte [rdi + rcx]
+	mov al, byte [rdi + rsi]
 
 	cmp al, 'a'
 	jl .next
@@ -73,12 +73,11 @@ toupper:
 	jg .next
 
 	sub al, OFFSET
-	mov byte [rdi + rcx], al
+	mov byte [rdi + rsi], al
 
 .next:
-	inc rcx
-	cmp rcx, rsi
-	jl .loop
+	dec rsi
+	jns .loop
 
 	ret
 
