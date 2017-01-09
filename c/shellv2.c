@@ -26,31 +26,23 @@ void bufrst(void)
 	bufi = 0;
 }
 
-void bufprint(void)
-{
-	if (bufi > 0) {
-		fputs_unlocked(buf, stdout);
-		fputs_unlocked("\n", stdout);
-	}
-}
-
 int main(int argc, char *argv[])
 {
-	char *prompt = "> ";
 	int c;
 
 prompt:
 	bufrst();
-	fputs_unlocked(prompt, stdout);
+	printf("> ");
 
-	while ((c = fgetc_unlocked(stdin)) != EOF) {
+	while ((c = getchar()) != EOF) {
 		if (c == '\n') {
-			bufprint();
+			if (bufi > 0)
+				puts(buf);
 			goto prompt;
 		}
 		bufc(c);
 	}
 
-	fputs_unlocked("\n", stdout);
+	printf("\n");
 	return 0;
 }
