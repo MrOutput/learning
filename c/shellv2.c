@@ -19,8 +19,7 @@ void bufc(char c)
 {
 	if (bufi == inbuf.len-1)
 		chgbuf(&inbuf, inbuf.len*2);
-	inbuf.val[bufi] = toupper(c);
-	inbuf.val[++bufi] = '\0';
+	inbuf.val[bufi++] = toupper(c);
 }
 
 void bufrst(void)
@@ -41,8 +40,10 @@ prompt:
 
 	while ((c = getchar()) != EOF) {
 		if (c == '\n') {
-			if (bufi > 0)
+			if (bufi > 0) {
+				bufc('\0');
 				puts(inbuf.val);
+			}
 			goto prompt;
 		}
 		bufc(c);
