@@ -1,33 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
-int bufi;
-struct buf {
+struct dynbuf {
 	int len;
-	char *val;
+	int i;
+	char *buf;
 };
-struct buf inbuf;
+struct dynbuf input;
 
-void chgbuf(struct buf *b, int len)
+void chgbuf(struct dynbuf *b, int len)
 {
 	b->len = len;
-	b->val = realloc(b->val, len);
+	b->buf = realloc(b->buf, len);
 }
 
 void bufc(char c)
 {
-	if (bufi == inbuf.len-1)
-		chgbuf(&inbuf, inbuf.len*2);
-	inbuf.val[bufi++] = toupper(c);
+	if (input.i == input.len-1)
+		chgbuf(&input, input.len*2);
+	input.buf[input.i++] = c;
 }
 
 void bufrst(void)
 {
 	int init = 16;
-	if (inbuf.len != init)
-		chgbuf(&inbuf, init);
-	bufi = 0;
+	if (input.len != init)
+		chgbuf(&input, (init));
+	input.i = 0;
+}
+
+struct {
+	int n;
+	char *buf[5];
+} hist;
+
+void addhist()
+{
+	if (hist.n > 0) {
+		if (hist.n == 5)
+			free(hist.buf[4]);
+		//shift hist.buf over 1 element
+		memmove(hist.buf+1, hist.buf, (sizeof(char *) * hist.n));
+	}
+	int len = input.i+1;
+	char *cmd = malloc(len);
+	memcpy(cmd, input.buf, len);
+	hist.buf[0] = cmd;
+	hist.n++;
 }
 
 int main(int argc, char *argv[])
@@ -40,13 +61,14 @@ prompt:
 
 	while ((c = getchar()) != EOF) {
 		if (c == '\n') {
-			if (bufi > 0) {
+			if (input.i > 0) {
 				bufc('\0');
-				puts(inbuf.val);
+				puts(input.buf);
+				addhist();
 			}
 			goto prompt;
 		}
-		bufc(c);
+		bufc(toupper(c));
 	}
 
 	printf("\n");
