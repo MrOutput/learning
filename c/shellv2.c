@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <string.h>
 
+#define HIST_SZ 5
+
 struct dynbuf {
 	int len;
 	int i;
@@ -33,22 +35,19 @@ void bufrst(void)
 
 struct {
 	int n;
-	char *buf[5];
+	char *buf[HIST_SZ];
 } hist;
 
 void addhist()
 {
-	if (hist.n > 0) {
-		if (hist.n == 5)
-			free(hist.buf[4]);
-		//shift hist.buf over 1 element
+	if (hist.n == HIST_SZ) {
+		free(hist.buf[HIST_SZ-1]);
+		memmove(hist.buf+1, hist.buf, (sizeof(char *) * (HIST_SZ-1)));
+	} else if (hist.n > 0) {
 		memmove(hist.buf+1, hist.buf, (sizeof(char *) * hist.n));
+		hist.n++;
 	}
-	int len = input.i+1;
-	char *cmd = malloc(len);
-	memcpy(cmd, input.buf, len);
-	hist.buf[0] = cmd;
-	hist.n++;
+	hist.buf[0] = strdup(input.buf);
 }
 
 int main(int argc, char *argv[])
@@ -60,15 +59,16 @@ prompt:
 	printf("> ");
 
 	while ((c = getchar()) != EOF) {
-		if (c == '\n') {
+		switch (c) {
+		case '\n':
 			if (input.i > 0) {
 				bufc('\0');
-				puts(input.buf);
 				addhist();
 			}
 			goto prompt;
+		default:
+			bufc(c);
 		}
-		bufc(toupper(c));
 	}
 
 	printf("\n");
