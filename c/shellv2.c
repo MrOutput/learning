@@ -9,23 +9,22 @@ struct dynbuf {
 	int len;
 	int i;
 	char *buf;
-};
-struct dynbuf input;
+} input;
 
-void chgbuf(struct dynbuf *b, int len)
+static void chgbuf(struct dynbuf *b, int len)
 {
 	b->len = len;
 	b->buf = realloc(b->buf, len);
 }
 
-void bufc(char c)
+static void bufc(char c)
 {
 	if (input.i == input.len-1)
 		chgbuf(&input, input.len*2);
 	input.buf[input.i++] = c;
 }
 
-void bufrst(void)
+static void bufrst(void)
 {
 	int init = 16;
 	if (input.len != init)
@@ -38,15 +37,13 @@ struct {
 	char *buf[HIST_SZ];
 } hist;
 
-void addhist()
+static void addhist()
 {
-	if (hist.n == HIST_SZ) {
-		free(hist.buf[HIST_SZ-1]);
-		memmove(hist.buf+1, hist.buf, (sizeof(char *) * (HIST_SZ-1)));
-	} else if (hist.n > 0) {
-		memmove(hist.buf+1, hist.buf, (sizeof(char *) * hist.n));
+	if (hist.n < HIST_SZ)
 		hist.n++;
-	}
+	else
+		free(hist.buf[HIST_SZ-1]);
+	memmove(hist.buf+1, hist.buf, (sizeof(char *) * (HIST_SZ-1)));
 	hist.buf[0] = strdup(input.buf);
 }
 
