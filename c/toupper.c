@@ -1,20 +1,15 @@
 #include <unistd.h>
-#define OFFSET 0x20
 
-void to_upper(char str[], size_t len) {
-    for (int i = 0; i < len; i++) {
-        if (str[i] > 'a' && str[i] < 'z') {
-            str[i] -= OFFSET;
-        }
-    }
+void to_upper(char *str) {
+    for (; *str != '\0'; str++)
+        if (*str > 'a' && *str < 'z')
+            *str -= ' ';
 }
 
 int main()
 {
-    char message[] = "Hello, World!\n";
-    to_upper(message, sizeof message);
-
+    char *message = "Hello, World!\n";
+    to_upper(message);
     write(STDOUT_FILENO, message, sizeof message);
-
     return 0;
 }
