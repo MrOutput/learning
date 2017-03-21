@@ -23,16 +23,18 @@ int main(void)
 {
     DDRD = _BV(DDD6);//set PD6 output
     DDRB = _BV(DDB6);//set PB6 output
+        PORTB |= _BV(PORTB6);
+        PORTD |= _BV(PORTD6);
 
     MCUCR = _BV(BODS) | _BV(BODSE);//disable BOD
     PRR = _BV(PRTWI) | _BV(PRTIM2) | _BV(PRTIM1) | _BV(PRSPI) | _BV(PRUSART0) | _BV(PRADC);//disable unused features
     CLKPR = _BV(CLKPS0);//clk prescale 2
 
-    TCCR0A = _BV(COM0A1) | _BV(WGM01) | _BV(WGM00);//set OC0A on compare match; Fast PWM
-    TCCR0B = _BV(CS01);
-    TIMSK0 = _BV(OCIE0A);//enable output compare int for OA; enable ov int
+    //TCCR0A = _BV(COM0A1) | _BV(WGM01) | _BV(WGM00);//set OC0A on compare match; Fast PWM
+    //TCCR0B = _BV(CS01);
+    //TIMSK0 = _BV(OCIE0A);//enable output compare int for OA; enable ov int
 
-    sei();
+    //sei();
 
     sleep_enable();
     for (;;) {
