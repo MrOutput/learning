@@ -8,7 +8,7 @@ void to_upper(char *str) {
 
 int main()
 {
-    char *message = "Hello, World!\n";
+    char message[] = "Hello, World!\n";
     to_upper(message);
     write(STDOUT_FILENO, message, sizeof message);
     return 0;
