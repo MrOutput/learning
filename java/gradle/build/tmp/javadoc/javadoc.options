@@ -1,7 +1,0 @@
--classpath '/home/rafael/GitHub/learning/java/gradle/build/classes/main:/home/rafael/GitHub/learning/java/gradle/build/resources/main'
--d '/home/rafael/GitHub/learning/java/gradle/build/docs/javadoc'
--doctitle 'gradle API'
--quiet 
--windowtitle 'gradle API'
-'/home/rafael/GitHub/learning/java/gradle/src/main/java/hello/HelloWorld.java'
-'/home/rafael/GitHub/learning/java/gradle/src/main/java/hello/Greeter.java'
