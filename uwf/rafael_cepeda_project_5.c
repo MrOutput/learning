@@ -33,24 +33,21 @@
 int unused_set(char c)
 {
     static unsigned long long int lookup;
-    char bindex, bpos_offset, bpos;
+    char bindex, bpos_offset, bpos, res;
 
-    if (isupper(c)) {
-        bindex = (c-'A');
-        bpos_offset = ((sizeof(lookup)<<2)-1);
-    } else {
+    if (islower(c)) {
         bindex = (c-'a');
         bpos_offset = 0;
+    } else {
+        bindex = (c-'A');
+        bpos_offset = ((sizeof(lookup)<<2)-1);
     }
+
     bpos = (bindex+bpos_offset);
-    const unsigned long long int bit = (1<<bpos);
+    res = !(lookup & (1U<<bpos));
+    lookup |= res<<bpos;
 
-    if ((lookup&bit) == 0) {
-        lookup |= bit;
-        return 1;
-    }
-
-    return 0;
+    return res;
 }
 
 /*
@@ -87,9 +84,10 @@ int main()
     }
 
     /*
-     * not neccessary because the process's
+     * the process's
      * address space is reclaimed by the os,
-     * but why not?
+     * but here for thoroughness.
+     *
+     * free(line);
      */
-    free(line);
 }
