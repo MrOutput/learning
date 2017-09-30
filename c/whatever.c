@@ -12,21 +12,22 @@
 #define SGR_END "m"
 #define DEF_FG "39"
 
-void indent(int c)
+void addline(char *src, int tabs)
 {
     int i;
-    for (i = 0; i < c; i++)
+    for (i = 0; i < tabs; i++)
         printf("\t");
+    puts(src);
 }
 
 void whatever(int c, int i)
 {
-    indent(i), puts(CSI YLW SGR_END "what " CSI DEF_FG SGR_END  "{");
+    addline(CSI YLW SGR_END "what " CSI DEF_FG SGR_END  "{", i);
     if (c > 1)
         whatever(c-1, i+1);
     else
-        indent(i+1), puts(CSI RED SGR_END "ever" CSI DEF_FG SGR_END);
-    indent(i), puts("}");
+        addline(CSI RED SGR_END "ever" CSI DEF_FG SGR_END, i+1);
+    addline("}", i);
 }
 
 int isnum(char *s)
