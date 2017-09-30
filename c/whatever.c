@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #define ESC "\x1B"
 #define CSI ESC"["
@@ -28,11 +29,20 @@ void whatever(int c, int i)
     indent(i), puts("}");
 }
 
+int isnum(char *s)
+{
+    for (; *s != '\0'; s++)
+        if (isdigit(*s) == 0) 
+            return 0;
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
     int c = getopt(argc, argv, "n:");
-    if (argc == 3 && c == 'n')
-        whatever(atoi(optarg), 0);
+    int n;
+    if (argc == 3 && c == 'n' && isnum(optarg) && (n = atoi(optarg)) > 0)
+        whatever(n, 0);
     else
         puts(CSI RED AND BOLD SGR_END "nope." CSI DEF_FG SGR_END);
     return 0;
