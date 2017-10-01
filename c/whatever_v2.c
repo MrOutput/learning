@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 #define ESC "\x1B"
 #define CSI ESC"["
@@ -19,23 +20,22 @@ char end[] = "}\n";
 
 char *buf = NULL;
 
-void addline(char *src, int tabs)
+void addline(char *src, size_t size, int tabs)
 {
-    for (; tabs > 0; tabs--, buf++)
-        *buf = '\t';
-    for (; *src != '\0'; src++, buf++)
-        *buf = *src;
-    *buf = '\0';
+    memset(buf, '\t', tabs);
+    buf += tabs;
+    memcpy(buf, src, size);
+    buf += size-1;
 }
 
 void whatever(int c, int i)
 {
-    addline(what, i);
+    addline(what, sizeof(what), i);
     if (c > 1)
         whatever(c-1, i+1);
     else
-        addline(ever, i+1);
-    addline(end, i);
+        addline(ever, sizeof(ever), i+1);
+    addline(end, sizeof(end), i);
 }
 
 size_t calcsize(unsigned int n)
