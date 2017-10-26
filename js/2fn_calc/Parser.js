@@ -7,23 +7,20 @@
  * Sample Expressions
  * -3 + (5-6)
  * (3+1) + (-3-1)
+ * -23 + 3 - (18 + (-3 - 8))
+ * 3 + 2 + 3
+ * 3 + 2 - 1 + (-3-3)
  */
 const Lexer = require("./Lexer");
+const stack = [];
 
 var l = new Lexer("-23 + 3 - (18 + (-3 - 8))");
-var w = next();
+var w = l.next();
 
 if (e() && w.category === null)
-    console.log('valid');
+    console.log("%s = %s", l.string, stack.pop());
 else
     console.log("unexpected token '%s'", w.token);
-
-//debug hooks
-function next() {
-    var c = l.next();
-    console.log(c);
-    return c;
-}
 
 function e() {
     if (t())
@@ -32,26 +29,44 @@ function e() {
 
 function t() {
     if (w.token === "(") {
-        w = next();
+        w = l.next();
         if (e()) {
             if (w.token === ")") {
-                w = next();
+                w = l.next();
                 return true;
             }
         }
     } else if (w.category === Lexer.cat.INT) {
-        w = next();
+        stack.push(parseInt(w.token));
+        w = l.next();
         return true;
     }
 }
 
 function ep() {
     if (w.category === Lexer.cat.OP) {
-        w = next();
+        var _op = w.token;
+        var a = stack.pop();
+        w = l.next();
         if (e()) {
+            var b = stack.pop();
+            stack.push(calc(a, _op, b));
             return ep();
         }
     } else if (w.token === ")" || w.category === null) {
         return true;
     }
+}
+
+function calc(a, op, b) {
+    var fn = (op === "+") ? sum : diff;
+    return fn(a, b);
+}
+
+function sum(a, b) {
+    return a + b;
+}
+
+function diff(a, b) {
+    return a - b;
 }
