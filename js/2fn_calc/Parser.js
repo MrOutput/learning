@@ -3,78 +3,60 @@
  *
  * null categories _may_ be empty (e-string) expansions; need to finish lookaheads
  *
- * e -> s e'
- * e'-> T | epsilon
- * T -> op e
- * s -> num | s'
- * s'-> (se')s' | epsilon
+ * e -> t e'
+ * t -> (e)
+ *    | num
+ * e' -> op e e'
+ *    | epsilon
  *
  * -3 + (5-6)
  * (3+1) + (-3-1)
  */
 const Lexer = require("./Lexer");
-const epsilon = -1;
 
-var l = new Lexer("-3 + (5-6)");
-var w = next();
+var l = new Lexer("(3 + 3 - 3 + 2) + 5");
+var w = next(true);
 
-if (e() && (w.category === null || w.category === epsilon))
+if (e() && w.category === null)
     console.log('valid');
 else
     console.log('invalid');
-console.log(w);
 
 //debug hooks
-function next() {
-    var w = l.next();
-    console.log(w);
-    return w;
+function next(sup) {
+    if (!sup)
+        console.log(w);
+    var c = l.next();
+    return c;
 }
 
 function e() {
-    if (s())
+    if (t())
         return ep();
 }
 
-function s() {
-    if (w.category === Lexer.cat.INT) {
+function t() {
+    if (w.token === "(") {
         w = next();
-        return true;
-    }
-    return sp();
-}
-
-function sp() {
-    if (w.category === Lexer.cat.LP) {
-        w = next();
-        if (s()) {
-            if (ep()) {
-                if (w.category === Lexer.cat.RP) {
-                    w = next();
-                    return sp();
-                }
+        if (e()) {
+            if (w.token === ")") {
+                w = next();
+                return true;
             }
         }
-    } else if (w.category === Lexer.cat.LP) {//TODO finish lookahead
+    } else if (w.category === Lexer.cat.INT) {
         w = next();
-        w.category = epsilon;
         return true;
     }
 }
 
 function ep() {
-    if (t()) {
-        return ep();
-    } else {//TODO lookahead
-        w = next();
-        w.category = epsilon;
-        return true;
-    }
-}
-
-function t() {
     if (w.category === Lexer.cat.OP) {
         w = next();
-        return e();
+        if (e()) {
+            return ep();
+        }
+    } else if (w.token === ")" || w.category === null) {
+        return true;
     }
 }
