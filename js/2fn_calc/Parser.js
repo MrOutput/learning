@@ -1,32 +1,27 @@
-/*
- * TODO add error handling
- *
- * null categories _may_ be empty (e-string) expansions; need to finish lookaheads
- *
- * e -> t e'
+/* e -> t e'
  * t -> (e)
  *    | num
  * e' -> op e e'
  *    | epsilon
  *
+ * Sample Expressions
  * -3 + (5-6)
  * (3+1) + (-3-1)
  */
 const Lexer = require("./Lexer");
 
-var l = new Lexer("(3 + 3 - 3 + 2) + 5");
-var w = next(true);
+var l = new Lexer("-23 + 3 - (18 + (-3 - 8))");
+var w = next();
 
 if (e() && w.category === null)
     console.log('valid');
 else
-    console.log('invalid');
+    console.log("unexpected token '%s'", w.token);
 
 //debug hooks
-function next(sup) {
-    if (!sup)
-        console.log(w);
+function next() {
     var c = l.next();
+    console.log(c);
     return c;
 }
 

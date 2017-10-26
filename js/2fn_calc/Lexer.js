@@ -27,8 +27,11 @@ class Lexer {
                 this.rewind();
                 this.rewind();
                 var p = this.getchar();
-                c = this.getchar();
-                if (Lexer.isdigit(p)) {
+                this.getchar();
+                var n = this.getchar();
+                this.rewind();
+                if ((p === ")" || Lexer.isdigit(p)) &&
+                    (n === "(" || n === "-" || Lexer.isdigit(n))) {
                     lexeme.category = Lexer.cat.OP;
                     lexeme.token = c;
                     return lexeme;
@@ -39,6 +42,10 @@ class Lexer {
                 c = this.getchar();
             } while (Lexer.isdigit(c));
             this.rewind();
+            this.rewind();
+            var c = this.getchar();
+            if (c === "-")
+                throw new SyntaxError();
         } else if (c !== "") {
             throw new SyntaxError();
         }
