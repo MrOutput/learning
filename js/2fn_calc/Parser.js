@@ -1,8 +1,26 @@
-/* e -> t e'
- * t -> (e)
- *    | num
- * e' -> op e e'
+/* 4 function calculator w/ expo
+ * -------------------------------------
+ * TODO support funcs
+ * like sin, cos, tan, log, sqrt
+ * log_<base>, ln
+ *
+ * support identifiers:
+ * ans, e, pi
+ *
+ * e -> s
+ * s -> ps'
+ * s'-> +ps'
+ *    | -ps'
  *    | epsilon
+ * p -> xp'
+ * p'-> *xp'
+ *    | /xp'
+ *    | epsilon
+ * x -> zx'
+ * x'-> ^zx'
+ *    | epsilon
+ * z -> (e)
+ *    | num
  */
 const Lexer = require("./Lexer");
 
