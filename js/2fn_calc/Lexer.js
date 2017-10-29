@@ -14,7 +14,8 @@ class Lexer {
 
         if (c === "0") {
             lexeme.category = Lexer.cat.ZERO;
-        } else if (c === "+") {
+        } else if (c === "*" || c === "/" ||
+                   c === "+" || c === "^") {
             lexeme.category = Lexer.cat.OP;
         } else if (c === "(") {
             lexeme.category = Lexer.cat.LP;
