@@ -1,33 +1,9 @@
-/* current
- * -------
- * e -> t e'
- * e'-> op t e'
- *    | epsilon
- * t -> (e)
- *    | num
- *
- * planned: 4 function calculator w/ expo
- * --------------------------------------
- * TODO support funcs
- * like sin, cos, tan, log, sqrt
+/* TODO support funcs
+ * sin, cos, tan, log, sqrt
  * log_<base>, ln
  *
  * support identifiers:
  * ans, e, pi
- *
- * e -> p e'
- * e'-> + p e'
- *    | - p e'
- *    | epsilon
- * p -> x p'
- * p'-> * x p'
- *    | / x p'
- *    | epsilon
- * x -> z x'
- * x'-> ^ z x'
- *    | epsilon
- * z -> (e)
- *    | num
  */
 const Lexer = require("./Lexer");
 
@@ -72,109 +48,78 @@ class Parser {
         return a / b;
     }
 
+    _lrecmut(nt, pfn) {
+        if (nt.call(this))
+            return pfn.call(this);
+    }
+
+    _ophit(ops, nt, pfn, follow) {
+        if (ops.some(this._istok, this)) {
+            var _op = this.w.token;
+            var a = this.stack.pop();
+            this.w = this.l.next();
+            if (nt.call(this)) {
+                var b = this.stack.pop();
+                this.stack.push(Parser.calc(a, _op, b));
+                return pfn.call(this);
+            }
+        } else if (follow.some(this._istok, this) || this.w.category === null) {
+            return true;
+        }
+    }
+
+    _istok(o) {
+        return (o === this.w.token);
+    }
+
     exec(expr) {
         this.l = new Lexer(expr);
-        this.w = this.next();
+        this.w = this.l.next();
 
         if (!(this.e() || this.w.category === null))
-            throw new SyntaxError(this.token);
+            throw new SyntaxError(this.w.token);
 
         return this.stack.pop();
     }
 
     e() {
-        if (this.p())
-            return this.ep();
+        return this._lrecmut(this.p, this.ep);
     }
 
     ep() {
-        if (this.token === "+" || this.token === "-") {
-            var _op = this.token;
-            var a = this.stack.pop();
-            //
-            this.w = this.next();
-            if (this.p()) {
-                var b = this.stack.pop();
-                this.stack.push(Parser.calc(a, _op, b));
-                //
-                return this.ep();
-            }
-        } else if (this.token === ")" || this.w.category === null) {
-            return true;
-        }
+        return this._ophit(["+", "-"], this.p, this.ep, [")"]);
     }
 
     p() {
-        if (this.x())
-            return this.pp();
+        return this._lrecmut(this.x, this.pp);
     }
 
     pp() {
-        if (this.token === "*" || this.token === "/") {
-            var _op = this.token;
-            var a = this.stack.pop();
-            //
-            this.w = this.next();
-            if (this.x()) {
-                var b = this.stack.pop();
-                this.stack.push(Parser.calc(a, _op, b));
-                //
-                return this.pp();
-            }
-        } else if (this.token === "+" || this.token === "-" ||
-                   this.token === ")" || this.w.category === null) {
-            return true;
-        }
+        return this._ophit(["*", "/"], this.x, this.pp, ["+", "-", ")"]);
     }
     
     x() {
-        if (this.z())
-            return this.xp();
+        return this._lrecmut(this.z, this.xp);
     }
 
     xp() {
-        if (this.token === "^") {
-            var _op = this.token;
-            var a = this.stack.pop();
-            //
-            this.w = this.next();
-            if (this.z()) {
-                var b = this.stack.pop();
-                this.stack.push(Parser.calc(a, _op, b));
-                //
-                return this.xp();
-            }
-        } else if (this.token === "*" || this.token === "/" ||
-                   this.token === "+" || this.token === "-" ||
-                   this.token === ")" || this.w.category === null) {
-            return true;
-        }
+        return this._ophit(["^"], this.z, this.xp, ["*", "/", "+", "-", ")"]);
     }
 
     z() {
-        if (this.token === "(") {
-            this.w = this.next();
+        if (this.w.token === "(") {
+            this.w = this.l.next();
             if (this.e()) {
-                if (this.token === ")") {
-                    this.w = this.next();
+                if (this.w.token === ")") {
+                    this.w = this.l.next();
                     return true;
                 }
             }
         } else if (this.w.category === Lexer.cat.INT) {
-            this.stack.push(parseInt(this.token));
-            this.w = this.next();
+            this.stack.push(parseInt(this.w.token));
+            this.w = this.l.next();
             return true;
         }
-    }
-
-    get token() {
-        return this.w.token;
-    }
-    
-    next() {
-        var w = this.l.next();
-        //console.log(w);
-        return w;
     }
 }
 module.exports = Parser;
