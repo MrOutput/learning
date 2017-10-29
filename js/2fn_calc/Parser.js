@@ -1,5 +1,13 @@
-/* 4 function calculator w/ expo
- * -------------------------------------
+/* current
+ * -------
+ * e -> t e'
+ * e'-> op t e'
+ *    | epsilon
+ * t -> (e)
+ *    | num
+ *
+ * planned: 4 function calculator w/ expo
+ * --------------------------------------
  * TODO support funcs
  * like sin, cos, tan, log, sqrt
  * log_<base>, ln
@@ -80,7 +88,7 @@ class Parser {
             var _op = this.w.token;
             var a = this.stack.pop();
             this.w = this.l.next();
-            if (this.e()) {
+            if (this.t()) {
                 var b = this.stack.pop();
                 this.stack.push(Parser.calc(a, _op, b));
                 return this.ep();
