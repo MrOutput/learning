@@ -1,23 +1,12 @@
 SECTION .text
-;sysexit: equ 60
-;
-;global _start
-;_start:
-;        mov edi, 17
-;        mov esi, 16
-;        call calcsize
-;
-;exit:
-;        mov eax, sysexit
-;        xor edi, edi
-;        syscall
-;
-; input
+; inputs
 ;     edi: dword size
 ;     esi: dword alignment
+; output
+;     eax: dword aligned
 global calcsize
 calcsize:
-          xor edx,edx   ; unused for division
+          xor edx, edx  ; unused for division
           mov eax, edi  ; set size
           div esi       ; divide by alignment
                         ; edx:eax / r/m32

@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+typedef unsigned int uint;
 
 //asm ver
 int calcsize(int bytes, int balign);
@@ -6,9 +9,9 @@ int calcsize(int bytes, int balign);
 /* the compiler cannot make assumptions unless
  * unsigned is specified
  */
-unsigned int c_calcsize(unsigned int bytes, unsigned int balign) {
-    unsigned int quo = bytes / balign;
-    unsigned int rem = bytes % balign;
+uint c_calcsize(uint bytes, uint balign) {
+    uint quo = bytes / balign;
+    uint rem = bytes % balign;
 
     if (rem != 0)
         quo++;
@@ -16,9 +19,13 @@ unsigned int c_calcsize(unsigned int bytes, unsigned int balign) {
     return quo * balign;
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-    printf("calcsize: %d\n", calcsize(18, 16));
-    printf("c_calcsize: %d\n", c_calcsize(18, 16));
+    if (argc > 3)
+        return -1;
+    int a = atoi(argv[1]);
+    int b = atoi(argv[2]);
+    printf("%12s%5d\n", "calcsize: ", calcsize(a, b));
+    printf("%12s%5d\n", "c_calcsize: ", c_calcsize(a, b));
     return 0;
 }
