@@ -5,17 +5,21 @@
 #include <termios.h>
 #include <unistd.h>
 
-enum states { INIT, RED, YELLOW, GREEN, ERROR };
+enum state { ZERO, ONE, TWO, THREE, FOUR, FIVE, ERROR };
+enum symbol { GREEN, RED, YELLOW };
 
-enum states transitions[4][3] = {
-/*              RED    YELLOW  GREEN */
-/* INIT     */{ RED,   YELLOW, GREEN } ,
-/* RED      */{ ERROR, ERROR,  GREEN },
-/* YELLOW   */{ RED,   ERROR,  ERROR },
-/* GREEN    */{ ERROR, YELLOW, ERROR }
+//(r|yr)?gyr(gyr)*
+enum state transitions[6][3] = {
+	// G      R       Y
+	{ ONE,   TWO,   THREE },//0
+	{ ERROR, ERROR, FOUR  },//1
+	{ ONE,   ERROR, ERROR },//2
+	{ ERROR, TWO,   ERROR },//3
+	{ ERROR, FIVE,  ERROR },//4
+	{ ONE,   ERROR, ERROR } //5
 };
 
-__attribute__ ((pure)) enum states charstate(int c)
+__attribute__ ((pure)) int charstate(int c)
 {
     c = tolower(c);
     switch (c) {
@@ -26,10 +30,10 @@ __attribute__ ((pure)) enum states charstate(int c)
     }
 }
 
-__attribute__ ((pure)) enum states transition(enum states s, int c)
+__attribute__ ((pure)) enum state transition(enum state s, int c)
 {
     int i = charstate(c);
-    return (i == ERROR) ? ERROR : transitions[s][i-1];
+    return (i == ERROR) ? ERROR : transitions[s][i];
 }
 
 int main(void)
@@ -48,15 +52,17 @@ int main(void)
     }
 
 
-    enum states state = INIT;
+    enum state s = ZERO;
 
     printf("Traffic light sequence: ");
     int c;
-    while ((state != ERROR) && ((c = getchar()) != EOF)) {
-        state = transition(state, c);
+    while (s != ERROR &&
+	   (c = getchar()) != EOF &&
+	   !iscntrl(c)) {
+        s = transition(s, c);
     }
     printf("\n");
-    if (state == ERROR) {
+    if (s != FIVE || s == ERROR) {
         puts("Invalid sequence.");
     }
 
